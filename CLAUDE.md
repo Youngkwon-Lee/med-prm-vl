@@ -29,19 +29,33 @@ python 1_sample_dataset.py
 
 ```
 med-prm/
-├── CLAUDE.md              # This file
-├── README.md              # Project overview
-├── presentations/         # HTML/PDF presentations
-│   ├── Med-PRM_Presentation_v2.html
-│   ├── Med-PRM_Code_Guide.html
-│   ├── Med-PRM_Data_Flow_Example.html
-│   └── Med-PRM_Evidence_Guided_Reasoning.pdf
-├── scripts/               # Python scripts
-│   └── 1_sample_dataset.py
-├── docs/                  # Documentation
-│   └── CLINICAL_REVIEW_GUIDE.md
-└── data/                  # Generated data
-    └── phase1_samples/
+├── CLAUDE.md                    # This file
+├── SERVER_SETUP.md              # 내부 서버 설정 가이드
+├── original-repo/               # Med-PRM 원본 레포 (참조용)
+│
+├── model_train/                 # [서버] PRM 모델 (~15GB)
+│   └── llama-3.1-medprm-reward-v1.0/
+│
+├── dataset/                     # [서버] 데이터셋
+│   ├── dataset_1_train_dataset/
+│   ├── dataset_3_sampled_dataset/
+│   └── dataset_4_scored_dataset/
+│
+├── python/                      # [서버] 실행 스크립트
+│   ├── 0_preparing.py
+│   ├── 3_test_dataset_sampling.py
+│   └── 4_scoring_PRM.py
+│
+├── scripts/                     # 실행 스크립트
+│   ├── 1_sample_dataset.py      # Phase 1 샘플링
+│   ├── 4_scoring_PRM.sh         # [서버] PRM Scoring
+│   └── check_server_ready.py    # [서버] 환경 체크
+│
+├── data/                        # 로컬 생성 데이터
+│   └── phase1_samples/          # Phase 1 결과물
+│
+├── presentations/               # 발표자료
+└── docs/                        # 문서
 ```
 
 ## Dataset
@@ -65,7 +79,7 @@ med-prm/
 ## Key Commands
 
 ```bash
-# Phase 1: 샘플링
+# Phase 1: 샘플링 (로컬)
 python scripts/1_sample_dataset.py
 
 # 결과 확인
@@ -74,6 +88,22 @@ ls data/phase1_samples/
 # Excel 파일 위치
 data/phase1_samples/clinical_review_*.xlsx
 ```
+
+## 내부 서버 실행 (Phase 2)
+
+```bash
+# 1. 환경 체크
+python scripts/check_server_ready.py
+
+# 2. 데이터 다운로드
+python python/0_preparing.py
+
+# 3. PRM Scoring 실행
+bash scripts/4_scoring_PRM.sh
+```
+
+**필요 리소스**: GPU 24GB+, CUDA 12.1+, flash_attention_2
+**상세 설정**: `SERVER_SETUP.md` 참조
 
 ## Related Resources
 
