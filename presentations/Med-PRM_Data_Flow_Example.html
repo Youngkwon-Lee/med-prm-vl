@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Med-PRM Data Flow - Case Study</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            color: #1a1a2e;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #1a365d 0%, #2d4a6f 100%);
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .case-intro {
+            background: #f0f9ff;
+            border: 2px solid #0284c7;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .case-intro h2 {
+            color: #0369a1;
+            margin-bottom: 15px;
+        }
+
+        .question-box {
+            background: #fff;
+            border-left: 5px solid #0284c7;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .question-box .q-label {
+            color: #0369a1;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            margin-top: 15px;
+        }
+
+        .options div {
+            padding: 8px 15px;
+            margin: 5px 0;
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+
+        .options .correct {
+            background: #d1fae5;
+            border: 1px solid #059669;
+            font-weight: 600;
+        }
+
+        .stage {
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .stage-header {
+            background: #1a365d;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stage-number {
+            background: white;
+            color: #1a365d;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .stage-header h3 {
+            font-size: 1.3em;
+        }
+
+        .stage-header .file-name {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-left: auto;
+        }
+
+        .stage-content {
+            padding: 30px;
+        }
+
+        .data-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .data-box h4 {
+            color: #1a365d;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data-box h4::before {
+            content: "📄";
+        }
+
+        .arrow-down {
+            text-align: center;
+            padding: 15px;
+            font-size: 2em;
+            color: #64748b;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.88em;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .json-key {
+            color: #7dd3fc;
+        }
+
+        .json-string {
+            color: #86efac;
+        }
+
+        .json-number {
+            color: #fcd34d;
+        }
+
+        .step-marker {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .step-good {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .step-bad {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .flow-box {
+            background: #1a365d;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .flow-box.highlight {
+            background: #0284c7;
+        }
+
+        .flow-box.success {
+            background: #059669;
+        }
+
+        .flow-arrow {
+            font-size: 1.5em;
+            color: #64748b;
+        }
+
+        .info-callout {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-callout {
+            background: #fef3c7;
+            border-left: 4px solid #d97706;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .success-callout {
+            background: #d1fae5;
+            border-left: 4px solid #059669;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #1a365d;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .score-bar {
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #059669, #34d399);
+            border-radius: 10px;
+        }
+
+        .solution-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .solution-card.selected {
+            border-color: #059669;
+        }
+
+        .solution-header {
+            background: #f1f5f9;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .solution-header.selected {
+            background: #d1fae5;
+        }
+
+        .solution-body {
+            padding: 20px;
+        }
+
+        .step-scores {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .step-score {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .step-score.high {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .step-score.medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .step-score.low {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        code {
+            background: #f1f5f9;
+            color: #1a365d;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Med-PRM Data Flow - Case Study</h1>
+    <p>하나의 MedQA 문제로 보는 전체 파이프라인</p>
+</header>
+
+<div class="container">
+
+    <!-- Case Introduction -->
+    <div class="case-intro">
+        <h2>🏥 예시 케이스: MedQA 문제</h2>
+        <div class="question-box">
+            <div class="q-label">Question (문제)</div>
+            <p>A 65-year-old man presents with progressive shortness of breath and a productive cough for the past 3 months. He has a 40-pack-year smoking history. Physical examination reveals decreased breath sounds and hyperresonance on percussion. Chest X-ray shows flattened diaphragms. What is the most likely diagnosis?</p>
+            <div class="options">
+                <div>(A) Asthma</div>
+                <div>(B) Bronchiectasis</div>
+                <div class="correct">(C) Chronic obstructive pulmonary disease (COPD) ✓</div>
+                <div>(D) Lung cancer</div>
+            </div>
+        </div>
+        <p style="margin-top: 15px; color: #64748b;"><strong>정답:</strong> (C) COPD - 40 pack-year 흡연력, 호흡곤란, flattened diaphragms가 진단 근거</p>
+    </div>
+
+    <!-- Stage 0: Data Preparation -->
+    <div class="stage">
+        <div class="stage-header">
+            <div class="stage-number">0</div>
+            <h3>데이터 준비 (Data Preparation)</h3>
+            <span class="file-name">0_preparing.py</span>
+        </div>
+        <div class="stage-content">
+            <p>HuggingFace에서 MedQA 데이터셋을 다운로드합니다.</p>
+
+            <div class="data-box">
+                <h4>실행 코드</h4>
+                <pre>from huggingface_hub import snapshot_download
+
+# MedQA 학습 데이터셋 다운로드
+snapshot_download(
+    repo_id="luckychao/llama-3.1-medprm-reward-training-set",
+    repo_type="dataset",
+    local_dir="./dataset/reward-training-set"
+)</pre>
+            </div>
+
+            <div class="arrow-down">⬇️</div>
+
+            <div class="data-box">
+                <h4>다운로드된 원본 데이터 (JSON)</h4>
+                <pre>{
+    <span class="json-key">"question"</span>: <span class="json-string">"A 65-year-old man presents with progressive shortness of breath..."</span>,
+    <span class="json-key">"options"</span>: {
+        <span class="json-key">"A"</span>: <span class="json-string">"Asthma"</span>,
+        <span class="json-key">"B"</span>: <span class="json-string">"Bronchiectasis"</span>,
+        <span class="json-key">"C"</span>: <span class="json-string">"Chronic obstructive pulmonary disease (COPD)"</span>,
+        <span class="json-key">"D"</span>: <span class="json-string">"Lung cancer"</span>
+    },
+    <span class="json-key">"answer"</span>: <span class="json-string">"C"</span>,
+    <span class="json-key">"data_source"</span>: <span class="json-string">"medqa"</span>
+}</pre>
+            </div>
+
+            <div class="info-callout">
+                <strong>데이터 구조:</strong> 각 문제는 question, options (A-D), 정답 answer, 그리고 출처 data_source를 포함합니다.
+            </div>
+        </div>
+    </div>
+
+    <!-- Stage 1: Solution Generation + RAG Judge Labeling -->
+    <div class="stage">
+        <div class="stage-header">
+            <div class="stage-number">1</div>
+            <h3>솔루션 생성 + RAG Judge 레이블링</h3>
+            <span class="file-name">1_train_dataset_RAG_judge_labeling.py</span>
+        </div>
+        <div class="stage-content">
+
+            <div class="flow-diagram">
+                <div class="flow-box">Policy Model</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box highlight">솔루션 생성</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box highlight">RAG Judge</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box success">Step Labels</div>
+            </div>
+
+            <h4 style="margin-top: 25px; color: #1a365d;">Step 1-1: Policy Model이 솔루션 생성</h4>
+            <div class="data-box">
+                <h4>Policy Model 입력 (System Prompt)</h4>
+                <pre>You are a medical expert. Solve the following medical question
+step by step. Show your reasoning clearly and end with
+"The answer is (X)" where X is the option letter.</pre>
+            </div>
+
+            <div class="data-box">
+                <h4>Policy Model 출력 (생성된 솔루션)</h4>
+                <pre>## Step 1: Analyze the patient's history
+The patient is a 65-year-old man with a 40-pack-year smoking history.
+This significant tobacco exposure is a major risk factor for
+smoking-related lung diseases. <span class="step-marker">ки</span>
+
+## Step 2: Evaluate the symptoms
+Progressive shortness of breath and productive cough for 3 months
+suggests a chronic pulmonary condition rather than acute illness. <span class="step-marker">ки</span>
+
+## Step 3: Interpret physical examination findings
+Decreased breath sounds and hyperresonance on percussion indicate
+air trapping in the lungs, consistent with obstructive lung disease. <span class="step-marker">ки</span>
+
+## Step 4: Analyze chest X-ray findings
+Flattened diaphragms on chest X-ray is a classic sign of lung
+hyperinflation, strongly suggesting emphysema/COPD. <span class="step-marker">ки</span>
+
+## Step 5: Differential diagnosis
+- Asthma: Usually presents earlier in life, reversible obstruction
+- COPD: Matches all findings - smoking history, age, symptoms, imaging
+- Bronchiectasis: Would show different X-ray findings
+- Lung cancer: Would present with mass on X-ray <span class="step-marker">ки</span>
+
+## Final Answer
+The answer is \boxed{C} <span class="step-marker">ки</span></pre>
+            </div>
+
+            <div class="warning-callout">
+                <strong>ки (step marker):</strong> 각 추론 단계의 끝에 특수 문자 "ки"가 삽입됩니다. 이 마커는 PRM이 각 단계를 평가하는 위치를 표시합니다.
+            </div>
+
+            <h4 style="margin-top: 30px; color: #1a365d;">Step 1-2: RAG-AS-A-JUDGE로 각 Step 검증</h4>
+
+            <div class="data-box">
+                <h4>RAG Judge 프로세스</h4>
+                <pre># 각 Step마다 RAG로 의학 문헌 검색 후 검증
+
+<span style="color: #86efac;">## Step 1 검증</span>
+[RAG 검색] "40-pack-year smoking COPD risk factor"
+[검색 결과] "Smoking is the primary risk factor for COPD.
+            A 40-pack-year history significantly increases COPD risk."
+[Judge 판정] <span class="step-good">+ (Correct)</span> - 의학적으로 정확한 진술
+
+<span style="color: #86efac;">## Step 2 검증</span>
+[RAG 검색] "COPD symptoms progressive dyspnea productive cough"
+[검색 결과] "COPD typically presents with progressive dyspnea
+            and chronic productive cough."
+[Judge 판정] <span class="step-good">+ (Correct)</span> - 증상 해석이 정확함
+
+<span style="color: #86efac;">## Step 3 검증</span>
+[RAG 검색] "COPD physical exam hyperresonance decreased breath sounds"
+[검색 결과] "Physical findings in COPD include hyperresonance,
+            decreased breath sounds, and prolonged expiration."
+[Judge 판정] <span class="step-good">+ (Correct)</span> - 신체검사 해석 정확
+
+<span style="color: #86efac;">## Step 4 검증</span>
+[RAG 검색] "flattened diaphragm chest xray COPD emphysema"
+[검색 결과] "Flattened diaphragms on CXR indicate hyperinflation,
+            a hallmark of emphysema/COPD."
+[Judge 판정] <span class="step-good">+ (Correct)</span> - 영상 해석 정확
+
+<span style="color: #86efac;">## Step 5 검증</span>
+[RAG 검색] "differential diagnosis COPD asthma bronchiectasis"
+[검색 결과] "COPD vs Asthma: COPD is irreversible, smoking-related..."
+[Judge 판정] <span class="step-good">+ (Correct)</span> - 감별진단 논리 정확
+
+<span style="color: #86efac;">## Final Answer 검증</span>
+[정답 비교] 예측: C, 실제 정답: C
+[Judge 판정] <span class="step-good">+ (Correct)</span></pre>
+            </div>
+
+            <div class="arrow-down">⬇️</div>
+
+            <div class="data-box">
+                <h4>레이블링된 학습 데이터 (Output)</h4>
+                <pre>{
+    <span class="json-key">"question"</span>: <span class="json-string">"A 65-year-old man presents with..."</span>,
+    <span class="json-key">"answer"</span>: <span class="json-string">"C"</span>,
+    <span class="json-key">"prm_processed_solution"</span>: <span class="json-string">"## Step 1: Analyze... ки\n## Step 2: Evaluate... ки\n..."</span>,
+    <span class="json-key">"step_labels"</span>: [<span class="json-number">1, 1, 1, 1, 1, 1</span>],  <span style="color: #86efac;">// 모든 step이 correct (+)</span>
+    <span class="json-key">"orm_label"</span>: <span class="json-number">1</span>,  <span style="color: #86efac;">// 최종 답이 correct</span>
+    <span class="json-key">"extracted_answer"</span>: <span class="json-string">"C"</span>,
+    <span class="json-key">"score"</span>: <span class="json-number">1</span>
+}</pre>
+            </div>
+
+            <div class="info-callout">
+                <strong>레이블 의미:</strong><br>
+                • <code>step_labels: [1,1,1,1,1,1]</code> - 각 단계가 올바르면 1, 틀리면 0<br>
+                • <code>orm_label: 1</code> - 최종 답변이 맞으면 1 (Outcome Reward)<br>
+                • <code>score: 1</code> - 전체 솔루션 정확도
+            </div>
+        </div>
+    </div>
+
+    <!-- Stage 2: Training -->
+    <div class="stage">
+        <div class="stage-header">
+            <div class="stage-number">2</div>
+            <h3>PRM 모델 학습 (Training)</h3>
+            <span class="file-name">2_training.py</span>
+        </div>
+        <div class="stage-content">
+
+            <div class="flow-diagram">
+                <div class="flow-box">Labeled Data</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box highlight">Tokenize</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box highlight">Binary Loss</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box success">Trained PRM</div>
+            </div>
+
+            <h4 style="margin-top: 25px; color: #1a365d;">Step 2-1: 데이터 토크나이징</h4>
+
+            <div class="data-box">
+                <h4>Chat Template 적용</h4>
+                <pre># System Prompt + Question + Solution을 Chat 형식으로 변환
+
+messages = [
+    {
+        "role": "system",
+        "content": "You are evaluating medical reasoning steps..."
+    },
+    {
+        "role": "user",
+        "content": "Question: A 65-year-old man presents with...\n\n
+                   Options: (A) Asthma (B) Bronchiectasis..."
+    },
+    {
+        "role": "assistant",
+        "content": "## Step 1: Analyze the patient's history... ки\n
+                   ## Step 2: Evaluate the symptoms... ки\n..."
+    }
+]
+
+# Tokenize
+input_ids = tokenizer.apply_chat_template(messages, tokenize=True)
+# [1, 529, 29989, 5765, ..., 29871, 529, ...]  # 토큰 ID 시퀀스</pre>
+            </div>
+
+            <h4 style="margin-top: 25px; color: #1a365d;">Step 2-2: Loss 계산 (Binary Classification)</h4>
+
+            <div class="data-box">
+                <h4>Step-wise Binary Classification Loss</h4>
+                <pre># 각 "ки" 위치에서 "+ / -" 토큰에 대한 확률 계산
+
+<span style="color: #fcd34d;"># Step 1 위치에서</span>
+logits_at_step1 = model(input_ids)[step1_position]
+plus_logit = logits_at_step1[plus_token_id]   # " +" 토큰의 logit
+minus_logit = logits_at_step1[minus_token_id] # " -" 토큰의 logit
+
+# Softmax로 확률 계산
+probs = softmax([plus_logit, minus_logit])  # [0.92, 0.08]
+
+<span style="color: #fcd34d;"># Ground Truth</span>
+gt_label = step_labels[0]  # 1 (correct step)
+gt = [1.0, 0.0]  # positive가 정답
+
+<span style="color: #fcd34d;"># Cross Entropy Loss</span>
+loss = cross_entropy(probs, gt)
+# 모델이 "+"를 높게 예측하도록 학습</pre>
+            </div>
+
+            <div class="data-box">
+                <h4>전체 Loss 집계</h4>
+                <pre><span style="color: #86efac;"># 모든 Step의 Loss 합산</span>
+
+total_loss = 0
+for step_idx, step_position in enumerate(step_positions):
+    logits = model(input_ids)[step_position]
+    pred = softmax([logits[plus_id], logits[minus_id]])
+
+    gt_value = step_labels[step_idx]  # 0 or 1
+    gt = [gt_value, 1 - gt_value]
+
+    total_loss += cross_entropy(pred, gt)
+
+avg_loss = total_loss / len(step_positions)
+avg_loss.backward()  # Gradient 계산</pre>
+            </div>
+
+            <div class="info-callout">
+                <strong>학습 목표:</strong> PRM이 각 추론 단계의 "ки" 마커 위치에서 올바른 단계에는 "+" 토큰을, 잘못된 단계에는 "-" 토큰을 높은 확률로 예측하도록 학습합니다.
+            </div>
+
+            <h4 style="margin-top: 25px; color: #1a365d;">학습 설정</h4>
+            <table>
+                <tr>
+                    <th>파라미터</th>
+                    <th>값</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td>Base Model</td>
+                    <td>Llama-3.1-8B-Instruct</td>
+                    <td>사전학습된 기반 모델</td>
+                </tr>
+                <tr>
+                    <td>Learning Rate</td>
+                    <td>2e-6</td>
+                    <td>미세조정용 낮은 학습률</td>
+                </tr>
+                <tr>
+                    <td>Epochs</td>
+                    <td>3</td>
+                    <td>전체 데이터 3회 학습</td>
+                </tr>
+                <tr>
+                    <td>Effective Batch</td>
+                    <td>64</td>
+                    <td>1 × 64 gradient accumulation</td>
+                </tr>
+                <tr>
+                    <td>Max Length</td>
+                    <td>4096</td>
+                    <td>RAG 문서 포함 시 필요</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Stage 3: Test Sampling (Inference) -->
+    <div class="stage">
+        <div class="stage-header">
+            <div class="stage-number">3</div>
+            <h3>테스트 데이터 샘플링 (Inference)</h3>
+            <span class="file-name">3_test_dataset_sampling.py</span>
+        </div>
+        <div class="stage-content">
+
+            <div class="flow-diagram">
+                <div class="flow-box">Test Question</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box highlight">Policy Model</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box highlight">N개 솔루션</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box success">Best-of-N 후보</div>
+            </div>
+
+            <h4 style="margin-top: 25px; color: #1a365d;">Best-of-N을 위한 다중 솔루션 생성</h4>
+
+            <div class="data-box">
+                <h4>솔루션 생성 코드</h4>
+                <pre># 같은 문제에 대해 N개의 다른 솔루션 생성 (temperature > 0)
+
+def generate_solutions(question, n_samples=16):
+    solutions = []
+    for i in range(n_samples):
+        output = model.generate(
+            prompt=question,
+            temperature=0.7,  # 다양성을 위해
+            top_p=0.95,
+            max_tokens=1024
+        )
+
+        # Step 수 필터링: 3-9 steps만 유효
+        steps = extract_steps_from_text(output)
+        if 2 < len(steps) < 10:
+            solutions.append(output)
+
+    return solutions</pre>
+            </div>
+
+            <h4 style="margin-top: 25px; color: #1a365d;">생성된 16개 솔루션 예시</h4>
+
+            <!-- Solution 1 -->
+            <div class="solution-card">
+                <div class="solution-header">
+                    <strong>Solution #1</strong>
+                    <span>예측: C (COPD)</span>
+                </div>
+                <div class="solution-body">
+                    <p>Step 1 → Step 2 → Step 3 → Step 4 → Step 5 → Answer: C</p>
+                    <p style="color: #64748b; font-size: 0.9em;">올바른 추론 경로</p>
+                </div>
+            </div>
+
+            <!-- Solution 2 -->
+            <div class="solution-card">
+                <div class="solution-header">
+                    <strong>Solution #2</strong>
+                    <span>예측: C (COPD)</span>
+                </div>
+                <div class="solution-body">
+                    <p>Step 1 → Step 2 → Step 3 → Answer: C</p>
+                    <p style="color: #64748b; font-size: 0.9em;">더 짧은 추론, 정답</p>
+                </div>
+            </div>
+
+            <!-- Solution 3 (wrong) -->
+            <div class="solution-card">
+                <div class="solution-header" style="background: #fee2e2;">
+                    <strong>Solution #3</strong>
+                    <span style="color: #991b1b;">예측: A (Asthma) ❌</span>
+                </div>
+                <div class="solution-body">
+                    <p>Step 1 → <span style="color: #991b1b;">Step 2 (잘못된 해석)</span> → Step 3 → Answer: A</p>
+                    <p style="color: #991b1b; font-size: 0.9em;">Step 2에서 "wheezing"을 잘못 가정</p>
+                </div>
+            </div>
+
+            <!-- More solutions indicator -->
+            <div style="text-align: center; padding: 15px; color: #64748b;">
+                ... (총 16개 솔루션 생성) ...
+            </div>
+
+            <div class="data-box">
+                <h4>출력 데이터 형식</h4>
+                <pre>{
+    <span class="json-key">"question"</span>: <span class="json-string">"A 65-year-old man presents with..."</span>,
+    <span class="json-key">"answer"</span>: <span class="json-string">"C"</span>,
+    <span class="json-key">"solutions"</span>: [
+        {
+            <span class="json-key">"text"</span>: <span class="json-string">"## Step 1: Analyze... ки\n## Step 2..."</span>,
+            <span class="json-key">"extracted_answer"</span>: <span class="json-string">"C"</span>,
+            <span class="json-key">"score"</span>: <span class="json-number">1</span>  <span style="color: #86efac;">// 정답이면 1</span>
+        },
+        {
+            <span class="json-key">"text"</span>: <span class="json-string">"## Step 1: The patient... ки\n..."</span>,
+            <span class="json-key">"extracted_answer"</span>: <span class="json-string">"A"</span>,
+            <span class="json-key">"score"</span>: <span class="json-number">0</span>  <span style="color: #f87171;">// 오답이면 0</span>
+        },
+        <span style="color: #64748b;">// ... 16개 솔루션</span>
+    ]
+}</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stage 4: PRM Scoring -->
+    <div class="stage">
+        <div class="stage-header">
+            <div class="stage-number">4</div>
+            <h3>PRM 점수 계산 (Scoring)</h3>
+            <span class="file-name">4_scoring_PRM.py</span>
+        </div>
+        <div class="stage-content">
+
+            <div class="flow-diagram">
+                <div class="flow-box">16 Solutions</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box highlight">Trained PRM</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box highlight">Step Scores</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box success">Best Solution</div>
+            </div>
+
+            <h4 style="margin-top: 25px; color: #1a365d;">Step 4-1: 각 솔루션의 Step별 점수 계산</h4>
+
+            <div class="data-box">
+                <h4>PRM 점수 계산 코드</h4>
+                <pre>def get_prob(text, model, tokenizer):
+    """각 Step의 '+' 확률 계산"""
+
+    # 토크나이징
+    inputs = tokenizer(text, return_offsets_mapping=True)
+
+    # "ки" 위치 찾기
+    special_char = " ки"
+    positions = find_special_char_positions(text, inputs.offset_mapping)
+
+    # 모델 추론
+    with torch.no_grad():
+        outputs = model(inputs.input_ids)
+        logits = outputs.logits[0]
+
+    # 각 Step 위치에서 +/- 확률 계산
+    plus_probs = []
+    for pos in positions:
+        two_logits = torch.stack([
+            logits[pos][plus_token_id],   # " +"
+            logits[pos][minus_token_id]   # " -"
+        ])
+        probs = torch.softmax(two_logits, dim=0)
+        plus_probs.append(probs[0].item())  # "+" 확률
+
+    return {
+        "plus_probs": plus_probs,           # 모든 step 점수
+        "min_plus_prob": min(plus_probs),   # 최소값 (병목)
+        "final_plus_prob": plus_probs[-1]   # 마지막 step
+    }</pre>
+            </div>
+
+            <h4 style="margin-top: 25px; color: #1a365d;">Step 4-2: 16개 솔루션 점수 비교</h4>
+
+            <!-- Solution 1 - Best -->
+            <div class="solution-card selected">
+                <div class="solution-header selected">
+                    <strong>🏆 Solution #1 (Selected - Best)</strong>
+                    <span style="color: #065f46;">예측: C ✓</span>
+                </div>
+                <div class="solution-body">
+                    <p><strong>Step-wise Scores:</strong></p>
+                    <div class="step-scores">
+                        <span class="step-score high">Step 1: 0.94</span>
+                        <span class="step-score high">Step 2: 0.91</span>
+                        <span class="step-score high">Step 3: 0.89</span>
+                        <span class="step-score high">Step 4: 0.92</span>
+                        <span class="step-score high">Step 5: 0.88</span>
+                        <span class="step-score high">Final: 0.95</span>
+                    </div>
+                    <p style="margin-top: 15px;">
+                        <strong>Min Score: <span style="color: #059669; font-size: 1.2em;">0.88</span></strong>
+                        (모든 단계가 높은 점수)
+                    </p>
+                    <div class="score-bar" style="margin-top: 10px;">
+                        <div class="score-fill" style="width: 88%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution 2 -->
+            <div class="solution-card">
+                <div class="solution-header">
+                    <strong>Solution #2</strong>
+                    <span>예측: C ✓</span>
+                </div>
+                <div class="solution-body">
+                    <p><strong>Step-wise Scores:</strong></p>
+                    <div class="step-scores">
+                        <span class="step-score high">Step 1: 0.91</span>
+                        <span class="step-score medium">Step 2: 0.72</span>
+                        <span class="step-score high">Step 3: 0.85</span>
+                        <span class="step-score high">Final: 0.90</span>
+                    </div>
+                    <p style="margin-top: 15px;">
+                        <strong>Min Score: <span style="color: #d97706;">0.72</span></strong>
+                        (Step 2가 병목)
+                    </p>
+                    <div class="score-bar" style="margin-top: 10px;">
+                        <div class="score-fill" style="width: 72%; background: linear-gradient(90deg, #d97706, #fbbf24);"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution 3 - Wrong -->
+            <div class="solution-card">
+                <div class="solution-header" style="background: #fee2e2;">
+                    <strong>Solution #3</strong>
+                    <span style="color: #991b1b;">예측: A ❌</span>
+                </div>
+                <div class="solution-body">
+                    <p><strong>Step-wise Scores:</strong></p>
+                    <div class="step-scores">
+                        <span class="step-score high">Step 1: 0.89</span>
+                        <span class="step-score low">Step 2: 0.23</span>
+                        <span class="step-score medium">Step 3: 0.65</span>
+                        <span class="step-score low">Final: 0.31</span>
+                    </div>
+                    <p style="margin-top: 15px;">
+                        <strong>Min Score: <span style="color: #991b1b;">0.23</span></strong>
+                        (Step 2에서 잘못된 추론 감지!)
+                    </p>
+                    <div class="score-bar" style="margin-top: 10px;">
+                        <div class="score-fill" style="width: 23%; background: linear-gradient(90deg, #dc2626, #f87171);"></div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 style="margin-top: 30px; color: #1a365d;">Step 4-3: Best-of-N 선택</h4>
+
+            <div class="data-box">
+                <h4>선택 알고리즘</h4>
+                <pre># Min Score 기준으로 최선의 솔루션 선택
+
+solutions_with_scores = [
+    {"idx": 0, "answer": "C", "min_score": 0.88, "score": 1},
+    {"idx": 1, "answer": "C", "min_score": 0.72, "score": 1},
+    {"idx": 2, "answer": "A", "min_score": 0.23, "score": 0},
+    # ... 16개
+]
+
+# Min Score가 가장 높은 솔루션 선택
+best_solution = max(solutions_with_scores, key=lambda x: x["min_score"])
+
+print(f"Selected: Solution #{best_solution['idx']}")
+print(f"Predicted Answer: {best_solution['answer']}")  <span style="color: #86efac;"># C</span>
+print(f"Is Correct: {best_solution['score'] == 1}")    <span style="color: #86efac;"># True ✓</span></pre>
+            </div>
+
+            <div class="success-callout">
+                <strong>결과:</strong> PRM이 Step 2에서 잘못된 추론을 한 Solution #3 (오답 A)을 낮은 점수(0.23)로 정확히 필터링하고, 모든 단계가 올바른 Solution #1 (정답 C)을 선택했습니다.
+            </div>
+
+            <h4 style="margin-top: 30px; color: #1a365d;">최종 출력 형식</h4>
+
+            <div class="data-box">
+                <h4>결과 JSON</h4>
+                <pre>{
+    <span class="json-key">"question_id"</span>: <span class="json-string">"medqa_001"</span>,
+    <span class="json-key">"question"</span>: <span class="json-string">"A 65-year-old man presents with..."</span>,
+    <span class="json-key">"correct_answer"</span>: <span class="json-string">"C"</span>,
+    <span class="json-key">"solutions"</span>: [
+        {
+            <span class="json-key">"text"</span>: <span class="json-string">"## Step 1: Analyze..."</span>,
+            <span class="json-key">"extracted_answer"</span>: <span class="json-string">"C"</span>,
+            <span class="json-key">"prm_scores"</span>: [<span class="json-number">0.94, 0.91, 0.89, 0.92, 0.88, 0.95</span>],
+            <span class="json-key">"prm_min_score"</span>: <span class="json-number">0.88</span>,
+            <span class="json-key">"score"</span>: <span class="json-number">1</span>
+        },
+        <span style="color: #64748b;">// ... 16개 솔루션</span>
+    ],
+    <span class="json-key">"best_solution_idx"</span>: <span class="json-number">0</span>,
+    <span class="json-key">"predicted_answer"</span>: <span class="json-string">"C"</span>,
+    <span class="json-key">"is_correct"</span>: <span class="json-number">true</span>
+}</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="stage">
+        <div class="stage-header" style="background: #059669;">
+            <div class="stage-number" style="color: #059669;">✓</div>
+            <h3>전체 파이프라인 요약</h3>
+        </div>
+        <div class="stage-content">
+
+            <table>
+                <tr>
+                    <th>Stage</th>
+                    <th>파일</th>
+                    <th>입력</th>
+                    <th>출력</th>
+                    <th>핵심 동작</th>
+                </tr>
+                <tr>
+                    <td><strong>0</strong></td>
+                    <td>0_preparing.py</td>
+                    <td>HuggingFace repo</td>
+                    <td>Raw JSON data</td>
+                    <td>데이터셋 다운로드</td>
+                </tr>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>1_train_dataset_RAG_judge_labeling.py</td>
+                    <td>Question + Options</td>
+                    <td>Labeled Solutions</td>
+                    <td>솔루션 생성 + RAG 검증 + Step 레이블링</td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>2_training.py</td>
+                    <td>Labeled Solutions</td>
+                    <td>Trained PRM</td>
+                    <td>Binary Loss로 +/- 예측 학습</td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>3_test_dataset_sampling.py</td>
+                    <td>Test Questions</td>
+                    <td>N개 Solutions</td>
+                    <td>Policy Model로 다중 솔루션 생성</td>
+                </tr>
+                <tr>
+                    <td><strong>4</strong></td>
+                    <td>4_scoring_PRM.py</td>
+                    <td>N개 Solutions</td>
+                    <td>Best Answer</td>
+                    <td>Step별 점수 계산 + Best-of-N 선택</td>
+                </tr>
+            </table>
+
+            <div class="flow-diagram" style="margin-top: 25px;">
+                <div class="flow-box">Question</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box">Policy Model</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box highlight">16 Solutions</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box highlight">PRM Score</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box success">Best Answer<br><small>(C: COPD)</small></div>
+            </div>
+
+            <div class="success-callout" style="margin-top: 25px;">
+                <strong>핵심 인사이트:</strong><br>
+                • PRM은 최종 답변만 보는 것이 아니라 <strong>각 추론 단계의 품질</strong>을 평가합니다<br>
+                • <strong>Min Score</strong> 기준으로 선택하면 "어디선가 잘못된 추론"을 한 솔루션을 필터링할 수 있습니다<br>
+                • RAG-AS-A-JUDGE를 통해 의학 문헌 기반의 신뢰할 수 있는 레이블을 생성합니다<br>
+                • Best-of-32 + RAG 조합으로 MedQA에서 <strong>80.35% 정확도</strong> 달성
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>Med-PRM Data Flow - Case Study</p>
+    <p>Based on: <a href="https://github.com/eth-medical-ai-lab/Med-PRM" style="color: #2563eb;">https://github.com/eth-medical-ai-lab/Med-PRM</a></p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Med-PRM: Process Reward Model for Medical Reasoning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a2e;
+            line-height: 1.6;
+        }
+
+        .slide {
+            width: 100%;
+            max-width: 1200px;
+            min-height: 700px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 50px 60px;
+            page-break-after: always;
+        }
+
+        .slide-title {
+            background: linear-gradient(135deg, #1a365d 0%, #2d4a6f 100%);
+            color: white;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .slide-title h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .slide-title h2 {
+            font-size: 1.5em;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .slide-title .subtitle {
+            font-size: 1.1em;
+            opacity: 0.8;
+            max-width: 700px;
+        }
+
+        h2.section-title {
+            color: #1a365d;
+            font-size: 2em;
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #1a365d;
+        }
+
+        h3 {
+            color: #2d4a6f;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        ul {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .highlight-box {
+            background: #f0f9ff;
+            border-left: 5px solid #1a365d;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .key-point {
+            background: #1a365d;
+            color: white;
+            padding: 20px 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-box .number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #1a365d;
+        }
+
+        .stat-box .label {
+            font-size: 1em;
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        .pipeline-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin: 25px 0;
+        }
+
+        .pipeline-box {
+            background: #1a365d;
+            color: white;
+            padding: 18px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .pipeline-box.highlight {
+            background: #2563eb;
+        }
+
+        .pipeline-box.success {
+            background: #059669;
+        }
+
+        .arrow {
+            font-size: 1.8em;
+            color: #64748b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 15px 18px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #1a365d;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .comparison-table th:first-child {
+            width: 25%;
+        }
+
+        .good {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .best {
+            color: #059669;
+            font-weight: 700;
+            background: #d1fae5 !important;
+        }
+
+        code {
+            background: #f1f5f9;
+            color: #1a365d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .info-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .warning-text {
+            color: #d97706;
+            font-weight: 600;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            color: #94a3b8;
+            font-size: 0.9em;
+        }
+
+        .formula-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px 25px;
+            border-radius: 10px;
+            font-family: 'Consolas', monospace;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .step-diagram {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .step-row {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            gap: 15px;
+        }
+
+        .step-num {
+            background: #1a365d;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .correction-box {
+            background: #fef3c7;
+            border: 2px solid #d97706;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .correction-box .wrong {
+            color: #dc2626;
+            text-decoration: line-through;
+        }
+
+        .correction-box .correct {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        @media print {
+            .slide {
+                page-break-after: always;
+                box-shadow: none;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1: Title -->
+    <div class="slide slide-title">
+        <h1>Med-PRM</h1>
+        <h2>Enhancing Medical Reasoning of LLMs<br>with Process Reward Models</h2>
+        <p class="subtitle">RAG-AS-A-JUDGE를 활용한 의료 추론 검증</p>
+        <p style="margin-top: 50px; opacity: 0.7;">ETH Zürich Medical AI Lab | 2025</p>
+    </div>
+
+    <!-- Slide 2: Problem Statement -->
+    <div class="slide">
+        <h2 class="section-title">1. 연구 배경 및 문제</h2>
+
+        <h3>LLM 의료 추론의 한계</h3>
+        <ul>
+            <li>LLM은 의료 질문에서 <strong>"그럴듯하지만 틀린" 답변</strong>을 자주 생성</li>
+            <li>최종 답만 평가하는 <strong>Outcome Reward Model (ORM)</strong>은 추론 과정의 오류를 놓침</li>
+            <li>기존 PRM은 수학/코딩에 특화 → <strong>의료 도메인에 부적합</strong></li>
+        </ul>
+
+        <div class="highlight-box">
+            <strong>핵심 문제:</strong> 의료 추론에서 "각 단계가 의학적으로 올바른가?"를 어떻게 검증할 것인가?
+        </div>
+
+        <h3>기존 접근법의 한계</h3>
+        <div class="two-column">
+            <div class="info-card">
+                <h4 style="color: #dc2626;">ORM (Outcome RM)</h4>
+                <ul>
+                    <li>최종 답변만 평가</li>
+                    <li>잘못된 추론으로 맞은 답 → 높은 점수</li>
+                    <li>추론 과정 오류 감지 불가</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h4 style="color: #059669;">PRM (Process RM)</h4>
+                <ul>
+                    <li>각 추론 단계를 개별 평가</li>
+                    <li>중간 단계 오류 감지 가능</li>
+                    <li><strong>의료 도메인용 PRM 부재</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Solution Overview -->
+    <div class="slide">
+        <h2 class="section-title">2. Med-PRM 솔루션</h2>
+
+        <div class="key-point">
+            <strong>핵심 아이디어:</strong> RAG-AS-A-JUDGE로 의료 문헌 기반 Step-wise 검증 → Medical PRM 학습
+        </div>
+
+        <h3>RAG-AS-A-JUDGE란?</h3>
+        <p>각 추론 단계마다 <strong>관련 의학 문헌을 검색(RAG)</strong>하여, 해당 단계가 의학적으로 올바른지 자동으로 판단하는 방식</p>
+
+        <div class="pipeline-flow">
+            <div class="pipeline-box">추론 Step</div>
+            <span class="arrow">→</span>
+            <div class="pipeline-box highlight">RAG 검색</div>
+            <span class="arrow">→</span>
+            <div class="pipeline-box highlight">문헌 기반 검증</div>
+            <span class="arrow">→</span>
+            <div class="pipeline-box success">+/- 레이블</div>
+        </div>
+
+        <h3>주요 기여</h3>
+        <ul>
+            <li><strong>RAG-AS-A-JUDGE:</strong> 의학 문헌 기반의 신뢰할 수 있는 Step-wise 레이블 생성</li>
+            <li><strong>Med-PRM:</strong> 의료 도메인 최초의 Process Reward Model</li>
+            <li><strong>MedQA 80.35%:</strong> 8B 모델 최초로 80% 돌파</li>
+        </ul>
+    </div>
+
+    <!-- Slide 4: Methodology - RAG-AS-A-JUDGE -->
+    <div class="slide">
+        <h2 class="section-title">3. 방법론: RAG-AS-A-JUDGE</h2>
+
+        <div class="step-diagram">
+            <h4 style="margin-bottom: 20px; color: #1a365d;">Step-wise 검증 프로세스</h4>
+
+            <div class="step-row">
+                <div class="step-num">1</div>
+                <div><strong>Step 추출:</strong> 솔루션에서 각 추론 단계 분리</div>
+            </div>
+
+            <div class="step-row">
+                <div class="step-num">2</div>
+                <div><strong>RAG 검색:</strong> 각 Step에 대해 관련 의학 문헌 검색 (MedCorp 사용)</div>
+            </div>
+
+            <div class="step-row">
+                <div class="step-num">3</div>
+                <div><strong>Judge 평가:</strong> 검색된 문헌과 Step 내용 비교 → 의학적 정확성 판단</div>
+            </div>
+
+            <div class="step-row">
+                <div class="step-num">4</div>
+                <div><strong>레이블 생성:</strong> 올바르면 <code>+</code>, 틀리면 <code>-</code> 레이블 부여</div>
+            </div>
+        </div>
+
+        <h3>예시: COPD 진단 문제</h3>
+        <table>
+            <tr>
+                <th>Step</th>
+                <th>추론 내용</th>
+                <th>RAG 검색 결과</th>
+                <th>판정</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>40-pack-year 흡연력은 COPD 위험인자</td>
+                <td>"Smoking is primary risk factor for COPD"</td>
+                <td class="good">+</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Flattened diaphragm은 폐 과팽창 징후</td>
+                <td>"Flattened diaphragms indicate hyperinflation"</td>
+                <td class="good">+</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Slide 5: Full Pipeline -->
+    <div class="slide">
+        <h2 class="section-title">4. 전체 파이프라인</h2>
+
+        <div class="pipeline-flow" style="flex-direction: column; gap: 25px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="pipeline-box">Policy Model</div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box highlight">솔루션 생성</div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box highlight">RAG-AS-A-JUDGE</div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box success">Step Labels</div>
+            </div>
+            <div style="font-size: 1.5em; color: #64748b;">⬇️ 학습 데이터</div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="pipeline-box success">PRM 학습</div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box success">Trained Med-PRM</div>
+            </div>
+        </div>
+
+        <h3>1단계: PRM 학습</h3>
+        <ul>
+            <li>Policy Model이 솔루션 생성 (CoT reasoning)</li>
+            <li>RAG-AS-A-JUDGE로 각 Step 검증 → <code>[+, +, -, +, +]</code> 형태의 레이블</li>
+            <li>레이블된 데이터로 PRM 학습 (Binary Classification)</li>
+        </ul>
+
+        <h3>2단계: Policy Model 개선 (선택적)</h3>
+        <ul>
+            <li><strong>Rejection Sampling:</strong> PRM 점수가 높은 솔루션만 선택</li>
+            <li>선택된 고품질 솔루션으로 Policy Model SFT</li>
+        </ul>
+    </div>
+
+    <!-- Slide 6: PRM Training Details -->
+    <div class="slide">
+        <h2 class="section-title">5. PRM 학습 상세</h2>
+
+        <h3>학습 목표</h3>
+        <p>각 추론 단계의 "ки" 마커 위치에서 <code>+</code> (correct) 또는 <code>-</code> (incorrect) 토큰의 확률을 예측</p>
+
+        <div class="formula-box">
+            Loss = CrossEntropy( softmax([logit<sub>+</sub>, logit<sub>-</sub>]), [gt, 1-gt] )
+        </div>
+
+        <h3>학습 설정</h3>
+        <table>
+            <tr>
+                <th>파라미터</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td>Base Model</td>
+                <td>Llama-3.1-8B-Instruct</td>
+            </tr>
+            <tr>
+                <td>Learning Rate</td>
+                <td>2e-6</td>
+            </tr>
+            <tr>
+                <td>Epochs</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>Effective Batch Size</td>
+                <td>64 (1 × 64 accumulation)</td>
+            </tr>
+            <tr>
+                <td>Precision</td>
+                <td>BFloat16</td>
+            </tr>
+            <tr>
+                <td>Max Sequence Length</td>
+                <td>4096 (RAG 포함 시)</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Slide 7: Inference Strategies -->
+    <div class="slide">
+        <h2 class="section-title">6. Inference: Test-time Scaling</h2>
+
+        <div class="two-column">
+            <div class="info-card">
+                <h3 style="color: #1a365d;">Best-of-N</h3>
+                <p>N개 솔루션 생성 → PRM으로 각각 점수 계산 → <strong>Min Score가 가장 높은 솔루션 선택</strong></p>
+                <div class="pipeline-flow" style="padding: 15px; gap: 8px;">
+                    <div class="pipeline-box" style="padding: 10px 15px; min-width: auto;">N개 생성</div>
+                    <span class="arrow" style="font-size: 1.2em;">→</span>
+                    <div class="pipeline-box highlight" style="padding: 10px 15px; min-width: auto;">PRM 점수</div>
+                    <span class="arrow" style="font-size: 1.2em;">→</span>
+                    <div class="pipeline-box success" style="padding: 10px 15px; min-width: auto;">Best 선택</div>
+                </div>
+                <p style="font-size: 0.95em; color: #64748b;">* Min Score: 모든 Step 중 가장 낮은 점수 (병목 품질)</p>
+            </div>
+
+            <div class="info-card">
+                <h3 style="color: #1a365d;">SC+RM (Self-Consistency + RM)</h3>
+                <p>N개 솔루션의 답변별 <strong>PRM 점수를 가중치로 Majority Voting</strong></p>
+                <div class="formula-box" style="font-size: 0.9em; padding: 15px;">
+                    Score(answer) = Σ PRM_score(sol<sub>i</sub>)
+                </div>
+                <p style="font-size: 0.95em; color: #64748b;">* 단순 다수결이 아닌 품질 가중 투표</p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 30px;">Min Score 선택 이유</h3>
+        <div class="highlight-box">
+            추론 체인에서 <strong>가장 약한 단계(병목)</strong>가 전체 품질을 결정합니다.<br>
+            Min Score가 높다 = 모든 단계가 일정 수준 이상의 품질을 가짐
+        </div>
+    </div>
+
+    <!-- Slide 8: Main Results (CORRECTED) -->
+    <div class="slide">
+        <h2 class="section-title">7. 실험 결과 (MedQA)</h2>
+
+        <div class="stat-grid">
+            <div class="stat-box">
+                <div class="number" style="color: #059669;">80.35%</div>
+                <div class="label">MedQA 정확도<br>(8B 모델 최초 80% 돌파)</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">+2.44%</div>
+                <div class="label">vs MedS³ (SC+RM)<br>기존 Medical PRM 대비</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">+3.08%</div>
+                <div class="label">vs MedS³ (Best-of-N)<br>기존 Medical PRM 대비</div>
+            </div>
+        </div>
+
+        <h3>MedQA 벤치마크 비교</h3>
+        <table>
+            <tr>
+                <th>Model</th>
+                <th>Greedy</th>
+                <th>Best-of-N</th>
+                <th>SC+RM</th>
+            </tr>
+            <tr>
+                <td>Llama-3.1-8B (baseline)</td>
+                <td>61.27%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>+ General PRM (Skywork)</td>
+                <td>-</td>
+                <td>74.94%</td>
+                <td>73.84%</td>
+            </tr>
+            <tr>
+                <td>+ MedS³ (기존 Medical PRM)</td>
+                <td>-</td>
+                <td>77.22%</td>
+                <td>77.85%</td>
+            </tr>
+            <tr class="best">
+                <td><strong>+ Med-PRM (Ours)</strong></td>
+                <td>-</td>
+                <td><strong>80.30%</strong></td>
+                <td><strong>80.35%</strong></td>
+            </tr>
+        </table>
+
+        <div class="correction-box">
+            <strong>정확한 표현:</strong><br>
+            "Med-PRM은 기존 Medical PRM (MedS³) 대비<br>
+            SC+RM에서 <span class="correct">평균 2.44%</span>, Best-of-N에서 <span class="correct">3.08%</span> 성능 향상"
+        </div>
+    </div>
+
+    <!-- Slide 9: Benchmark Results (CORRECTED) -->
+    <div class="slide">
+        <h2 class="section-title">8. 7개 의료 벤치마크 결과</h2>
+
+        <table style="font-size: 0.95em;">
+            <tr>
+                <th>Benchmark</th>
+                <th>Best-of-N SOTA</th>
+                <th>SC+RM SOTA</th>
+            </tr>
+            <tr>
+                <td>MedQA</td>
+                <td class="good">✓ Med-PRM</td>
+                <td class="good">✓ Med-PRM</td>
+            </tr>
+            <tr>
+                <td>MedMCQA</td>
+                <td>-</td>
+                <td class="good">✓ Med-PRM</td>
+            </tr>
+            <tr>
+                <td>MMLU-Med</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>PubMedQA</td>
+                <td class="good">✓ Med-PRM</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>BioASQ</td>
+                <td>-</td>
+                <td class="good">✓ Med-PRM</td>
+            </tr>
+            <tr>
+                <td>Medbullets</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>JAMA Clinical</td>
+                <td>-</td>
+                <td class="good">✓ Med-PRM</td>
+            </tr>
+        </table>
+
+        <div class="stat-grid" style="margin-top: 30px;">
+            <div class="stat-box">
+                <div class="number">2/7</div>
+                <div class="label">Best-of-N 기준<br>SOTA 달성</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">4/7</div>
+                <div class="label">SC+RM 기준<br>SOTA 달성</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">6/7</div>
+                <div class="label">두 설정 합산<br>최대 SOTA</div>
+            </div>
+        </div>
+
+        <div class="correction-box">
+            <strong>정확한 표현:</strong><br>
+            <span class="wrong">"7개 벤치마크 중 6개에서 SOTA"</span> (부정확)<br>
+            <span class="correct">"SC+RM 기준 4개, Best-of-N 기준 2개 벤치마크에서 SOTA 달성"</span>
+        </div>
+    </div>
+
+    <!-- Slide 10: Ablation Study -->
+    <div class="slide">
+        <h2 class="section-title">9. Ablation Study</h2>
+
+        <h3>RAG의 효과</h3>
+        <table>
+            <tr>
+                <th>설정</th>
+                <th>MedQA 정확도</th>
+                <th>차이</th>
+            </tr>
+            <tr>
+                <td>Med-PRM (RAG 없음)</td>
+                <td>78.63%</td>
+                <td>-</td>
+            </tr>
+            <tr class="best">
+                <td><strong>Med-PRM (RAG 있음)</strong></td>
+                <td><strong>80.35%</strong></td>
+                <td><strong>+1.72%</strong></td>
+            </tr>
+        </table>
+
+        <div class="highlight-box">
+            <strong>RAG의 역할:</strong> 의학 문헌 검색을 통해 더 정확한 Step-wise 레이블 생성 → PRM 품질 향상
+        </div>
+
+        <h3>N (샘플 수)에 따른 성능</h3>
+        <table>
+            <tr>
+                <th>N</th>
+                <th>Best-of-N</th>
+                <th>SC+RM</th>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>77.06%</td>
+                <td>77.85%</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>78.71%</td>
+                <td>79.18%</td>
+            </tr>
+            <tr class="best">
+                <td><strong>32</strong></td>
+                <td><strong>80.30%</strong></td>
+                <td><strong>80.35%</strong></td>
+            </tr>
+        </table>
+        <p style="color: #64748b; font-size: 0.95em;">* N이 증가할수록 성능 향상 (Test-time Scaling 효과)</p>
+    </div>
+
+    <!-- Slide 11: Key Insights -->
+    <div class="slide">
+        <h2 class="section-title">10. 핵심 인사이트</h2>
+
+        <div class="key-point">
+            <h3 style="color: white; margin-bottom: 15px;">1. PRM > ORM in Medical Reasoning</h3>
+            <p>의료 추론에서 Process Reward Model이 Outcome Reward Model보다 효과적</p>
+        </div>
+
+        <div class="key-point" style="background: #2563eb;">
+            <h3 style="color: white; margin-bottom: 15px;">2. RAG-AS-A-JUDGE의 효용성</h3>
+            <p>의학 문헌 기반 검증으로 신뢰할 수 있는 학습 데이터 생성 가능</p>
+        </div>
+
+        <div class="key-point" style="background: #059669;">
+            <h3 style="color: white; margin-bottom: 15px;">3. Test-time Scaling 효과</h3>
+            <p>N=32로 증가 시 MedQA 80% 돌파 (8B 모델 최초)</p>
+        </div>
+
+        <h3 style="margin-top: 30px;">Why Min Score?</h3>
+        <div class="highlight-box">
+            추론 체인은 가장 약한 고리(weakest link)에 의해 품질이 결정됨<br>
+            → <strong>Min Score가 높은 솔루션</strong> = 모든 단계가 안정적인 품질
+        </div>
+    </div>
+
+    <!-- Slide 12: Limitations -->
+    <div class="slide">
+        <h2 class="section-title">11. 한계점 및 향후 연구</h2>
+
+        <h3>한계점</h3>
+        <ul>
+            <li><strong>Compute Cost:</strong> N=32 샘플링은 추론 시간 증가</li>
+            <li><strong>RAG 의존성:</strong> 검색된 문헌의 품질에 따라 레이블 품질 변동</li>
+            <li><strong>도메인 특화:</strong> 의료 외 다른 도메인으로의 일반화 미검증</li>
+        </ul>
+
+        <h3>향후 연구 방향</h3>
+        <ul>
+            <li>더 효율적인 Test-time Scaling 방법 연구</li>
+            <li>Multi-modal 의료 데이터 (영상, 병리) 확장</li>
+            <li>RAG 검색 품질 향상을 위한 의료 특화 검색 모델</li>
+            <li>실제 임상 환경에서의 검증</li>
+        </ul>
+    </div>
+
+    <!-- Slide 13: Summary -->
+    <div class="slide">
+        <h2 class="section-title">12. 요약</h2>
+
+        <div class="stat-grid">
+            <div class="stat-box">
+                <div class="number" style="font-size: 1.5em;">RAG-AS-A-JUDGE</div>
+                <div class="label">의학 문헌 기반<br>Step-wise 검증</div>
+            </div>
+            <div class="stat-box">
+                <div class="number" style="font-size: 1.5em;">Med-PRM</div>
+                <div class="label">의료 도메인 최초<br>Process Reward Model</div>
+            </div>
+            <div class="stat-box">
+                <div class="number" style="color: #059669;">80.35%</div>
+                <div class="label">MedQA 정확도<br>8B 모델 최고 성능</div>
+            </div>
+        </div>
+
+        <div class="key-point" style="margin-top: 30px;">
+            <h3 style="color: white; margin-bottom: 15px;">Take-home Message</h3>
+            <p style="font-size: 1.1em;">
+                의료 AI에서 "최종 답"만 평가하는 것은 불충분합니다.<br>
+                <strong>각 추론 단계의 의학적 정확성</strong>을 검증하는 것이 핵심이며,<br>
+                RAG를 활용한 문헌 기반 검증이 이를 가능하게 합니다.
+            </p>
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; background: #f8fafc; border-radius: 10px;">
+            <p><strong>Paper:</strong> <a href="https://arxiv.org/abs/2506.11474">arxiv.org/abs/2506.11474</a></p>
+            <p><strong>Code:</strong> <a href="https://github.com/eth-medical-ai-lab/Med-PRM">github.com/eth-medical-ai-lab/Med-PRM</a></p>
+            <p><strong>Project:</strong> <a href="https://med-prm.github.io/">med-prm.github.io</a></p>
+        </div>
+    </div>
+
+    <!-- Slide 14: Q&A -->
+    <div class="slide slide-title">
+        <h1>Q&A</h1>
+        <h2>감사합니다</h2>
+        <p class="subtitle" style="margin-top: 40px;">
+            Med-PRM: Enhancing Medical Reasoning of LLMs with Process Reward Models
+        </p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Med-PRM Code Implementation Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            color: #1a1a2e;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #1a365d 0%, #2d4a6f 100%);
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e8e8e8;
+        }
+
+        .section h2 {
+            color: #1a365d;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #1a365d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section h3 {
+            color: #2d4a6f;
+            font-size: 1.3em;
+            margin: 25px 0 15px 0;
+        }
+
+        .step-number {
+            background: #1a365d;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+
+        code {
+            background: #f1f5f9;
+            color: #1a365d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+        }
+
+        .pipeline-diagram {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .pipeline-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .pipeline-box {
+            background: #1a365d;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .pipeline-box.highlight {
+            background: #2563eb;
+        }
+
+        .pipeline-box.success {
+            background: #059669;
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: #64748b;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 18px 22px;
+            margin: 18px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #d97706;
+            padding: 18px 22px;
+            margin: 18px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border-left: 4px solid #059669;
+            padding: 18px 22px;
+            margin: 18px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #1a365d;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .file-tree {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px 25px;
+            font-family: 'Consolas', monospace;
+            line-height: 1.8;
+        }
+
+        .file-tree .folder {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .file-tree .file {
+            color: #1a1a2e;
+        }
+
+        .toc {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 25px 30px;
+            margin-bottom: 35px;
+        }
+
+        .toc h3 {
+            margin-bottom: 15px;
+            color: #1a365d;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            padding: 8px 0;
+        }
+
+        .toc a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-green {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-orange {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .pipeline-flow {
+                flex-direction: column;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Med-PRM Code Implementation Guide</h1>
+    <p>Process Reward Model for Medical Reasoning - 코드 기반 구현 가이드</p>
+</header>
+
+<div class="container">
+
+    <!-- Table of Contents -->
+    <div class="toc">
+        <h3>목차 (Table of Contents)</h3>
+        <ul>
+            <li><a href="#overview">1. 프로젝트 개요 (Overview)</a></li>
+            <li><a href="#structure">2. 프로젝트 구조 (Repository Structure)</a></li>
+            <li><a href="#setup">3. 환경 설정 (Environment Setup)</a></li>
+            <li><a href="#pipeline">4. 전체 파이프라인 (Full Pipeline)</a></li>
+            <li><a href="#data-prep">5. 데이터 준비 (Data Preparation)</a></li>
+            <li><a href="#training">6. 학습 방법 (Training)</a></li>
+            <li><a href="#inference">7. 추론 방법 (Inference)</a></li>
+            <li><a href="#results">8. 결과 도출 (Getting Results)</a></li>
+            <li><a href="#hyperparams">9. 하이퍼파라미터 상세 (Hyperparameters)</a></li>
+        </ul>
+    </div>
+
+    <!-- 1. Overview -->
+    <section class="section" id="overview">
+        <h2><span class="step-number">1</span> 프로젝트 개요</h2>
+
+        <p>Med-PRM은 <strong>RAG-AS-A-JUDGE</strong> 방식을 활용한 의료 추론 검증을 위한 Process Reward Model입니다.</p>
+
+        <div class="info-box">
+            <strong>핵심 특징:</strong>
+            <ul style="margin-top: 10px; margin-left: 20px;">
+                <li>Llama-3.1-8B-Instruct 기반 모델</li>
+                <li>RAG를 활용한 Step-wise 검증</li>
+                <li>MedQA에서 80.35% 정확도 달성 (8B 모델 최초 80% 돌파)</li>
+                <li>Test-time scaling: Best-of-N, SC+RM 지원</li>
+            </ul>
+        </div>
+
+        <h3>GitHub Repository</h3>
+        <pre>https://github.com/eth-medical-ai-lab/Med-PRM</pre>
+    </section>
+
+    <!-- 2. Repository Structure -->
+    <section class="section" id="structure">
+        <h2><span class="step-number">2</span> 프로젝트 구조</h2>
+
+        <div class="file-tree">
+            <span class="folder">Med-PRM/</span><br>
+            ├── <span class="folder">dataset/</span><br>
+            │   ├── <span class="folder">dataset_1_train_dataset/</span> &nbsp; # 학습 데이터<br>
+            │   ├── <span class="folder">dataset_2_solutions/</span> &nbsp; # 솔루션 데이터<br>
+            │   └── <span class="folder">dataset_3_evaluation/</span> &nbsp; # 평가 데이터<br>
+            ├── <span class="folder">media/</span> &nbsp; # 로고 및 이미지<br>
+            ├── <span class="folder">python/</span><br>
+            │   ├── <span class="file">0_preparing.py</span> &nbsp; # 데이터 준비 스크립트<br>
+            │   ├── <span class="file">1_generating_solution.py</span> &nbsp; # 솔루션 생성<br>
+            │   ├── <span class="file">2_training.py</span> &nbsp; # 모델 학습<br>
+            │   ├── <span class="file">3_inference.py</span> &nbsp; # 추론 실행<br>
+            │   └── <span class="file">4_scoring_PRM.py</span> &nbsp; # PRM 점수 계산<br>
+            ├── <span class="folder">scripts/</span><br>
+            │   ├── <span class="file">2_training.sh</span> &nbsp; # 학습 실행 스크립트<br>
+            │   └── <span class="file">4_scoring_PRM.sh</span> &nbsp; # 점수 계산 스크립트<br>
+            ├── <span class="file">environment.yml</span> &nbsp; # Conda 환경 설정<br>
+            └── <span class="file">README.md</span>
+        </div>
+
+        <h3>주요 파일 설명</h3>
+        <table>
+            <tr>
+                <th>파일</th>
+                <th>역할</th>
+            </tr>
+            <tr>
+                <td><code>0_preparing.py</code></td>
+                <td>HuggingFace에서 데이터셋 다운로드</td>
+            </tr>
+            <tr>
+                <td><code>1_generating_solution.py</code></td>
+                <td>Policy Model로 솔루션 생성</td>
+            </tr>
+            <tr>
+                <td><code>2_training.py</code></td>
+                <td>PRM/Policy Model 학습</td>
+            </tr>
+            <tr>
+                <td><code>3_inference.py</code></td>
+                <td>모델 추론 실행</td>
+            </tr>
+            <tr>
+                <td><code>4_scoring_PRM.py</code></td>
+                <td>PRM으로 솔루션 점수 계산</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- 3. Environment Setup -->
+    <section class="section" id="setup">
+        <h2><span class="step-number">3</span> 환경 설정</h2>
+
+        <h3>필수 요구사항</h3>
+        <table>
+            <tr>
+                <th>패키지</th>
+                <th>버전</th>
+            </tr>
+            <tr>
+                <td>Python</td>
+                <td>3.10.16</td>
+            </tr>
+            <tr>
+                <td>PyTorch</td>
+                <td>2.6.0</td>
+            </tr>
+            <tr>
+                <td>Transformers</td>
+                <td>4.46.3</td>
+            </tr>
+            <tr>
+                <td>vLLM</td>
+                <td>0.8.4</td>
+            </tr>
+            <tr>
+                <td>CUDA</td>
+                <td>12.4</td>
+            </tr>
+        </table>
+
+        <h3>설치 방법</h3>
+        <pre># 1. 레포지토리 클론
+git clone https://github.com/eth-medical-ai-lab/Med-PRM.git
+cd Med-PRM
+
+# 2. Conda 환경 생성
+conda env create -f environment.yml
+
+# 3. 환경 활성화
+conda activate med-prm
+
+# 4. 데이터 다운로드
+python python/0_preparing.py</pre>
+
+        <div class="warning-box">
+            <strong>주의:</strong> GPU 메모리 최소 40GB 이상 권장 (A100 80GB 사용 시 최적)
+        </div>
+    </section>
+
+    <!-- 4. Full Pipeline -->
+    <section class="section" id="pipeline">
+        <h2><span class="step-number">4</span> 전체 파이프라인</h2>
+
+        <div class="pipeline-diagram">
+            <h3 style="margin-bottom: 25px; color: #1a365d;">Med-PRM Training & Inference Pipeline</h3>
+
+            <div class="pipeline-flow">
+                <div class="pipeline-box">0. Data Prep<br><small>데이터 준비</small></div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box highlight">1. Solution Gen<br><small>솔루션 생성</small></div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box highlight">2. Training<br><small>PRM 학습</small></div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box success">3. Inference<br><small>추론</small></div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box success">4. Scoring<br><small>점수 계산</small></div>
+            </div>
+        </div>
+
+        <h3>파이프라인 상세 흐름</h3>
+        <div class="pipeline-diagram">
+            <pre style="text-align: left; background: transparent; color: #1a365d;">
+┌─────────────────────────────────────────────────────────────────────┐
+│                      1. PRM Training Phase                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   [Policy Model]  →  [Judge Model (RAG)]  →  [PRM Training]        │
+│        │                    │                      │                │
+│   솔루션 생성          Step-wise 검증           보상 학습           │
+│   (CoT reasoning)      (RAG-AS-A-JUDGE)     (Process Reward)       │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                   2. Policy Model Training Phase                    │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   [Trained PRM]  →  [Rejection Sampling]  →  [Policy SFT]          │
+│        │                    │                      │                │
+│   솔루션 평가          상위 솔루션 선택        Policy 미세조정      │
+│   (점수 부여)          (High-reward 선택)     (선택된 데이터로)     │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                       3. Inference Phase                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   Test-time Scaling Strategies:                                     │
+│                                                                     │
+│   • Best-of-N: N개 샘플 생성 → PRM 점수 → 최고 점수 선택           │
+│   • SC+RM: Self-Consistency + Reward Model 결합                    │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘</pre>
+        </div>
+
+        <h3>Quick Start (전체 실행)</h3>
+        <pre># Step 0: 데이터 준비
+python python/0_preparing.py
+
+# Step 1: 솔루션 생성 (선택적)
+python python/1_generating_solution.py
+
+# Step 2: 모델 학습
+bash scripts/2_training.sh
+
+# Step 3-4: 추론 및 점수 계산
+bash scripts/4_scoring_PRM.sh</pre>
+    </section>
+
+    <!-- 5. Data Preparation -->
+    <section class="section" id="data-prep">
+        <h2><span class="step-number">5</span> 데이터 준비</h2>
+
+        <h3>데이터 다운로드 스크립트</h3>
+        <pre># python/0_preparing.py
+
+from huggingface_hub import snapshot_download
+
+# 학습 데이터셋 다운로드
+repos = [
+    "luckychao/llama-3.1-medprm-reward-training-set",      # PRM 학습용
+    "luckychao/llama-3.1-medprm-sft-training-set",         # SFT 학습용
+    "luckychao/llama-3.1-medprm-solutions",                # 솔루션 데이터
+    "luckychao/llama-3.1-medprm-evaluation"                # 평가용
+]
+
+for repo in repos:
+    snapshot_download(
+        repo_id=repo,
+        repo_type="dataset",
+        local_dir=f"./dataset/{repo.split('/')[-1]}"
+    )</pre>
+
+        <h3>데이터셋 구조</h3>
+        <table>
+            <tr>
+                <th>데이터셋</th>
+                <th>용도</th>
+                <th>내용</th>
+            </tr>
+            <tr>
+                <td><code>reward-training-set</code></td>
+                <td>PRM 학습</td>
+                <td>Step-wise 보상 레이블이 있는 솔루션</td>
+            </tr>
+            <tr>
+                <td><code>sft-training-set</code></td>
+                <td>Policy SFT</td>
+                <td>Rejection sampling으로 선택된 고품질 솔루션</td>
+            </tr>
+            <tr>
+                <td><code>solutions</code></td>
+                <td>평가</td>
+                <td>생성된 솔루션들</td>
+            </tr>
+            <tr>
+                <td><code>evaluation</code></td>
+                <td>테스트</td>
+                <td>MedQA, MedMCQA 등 벤치마크</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <strong>데이터 형식:</strong> JSON 파일로 저장되며, 각 항목에는 질문, 선택지, 정답, 그리고 step-wise 추론 과정이 포함됩니다.
+        </div>
+    </section>
+
+    <!-- 6. Training -->
+    <section class="section" id="training">
+        <h2><span class="step-number">6</span> 학습 방법</h2>
+
+        <h3>학습 스크립트 (scripts/2_training.sh)</h3>
+        <pre>#!/bin/bash
+
+# 학습 설정
+accelerate launch python/2_training.py \
+    --model_name_or_path meta-llama/Llama-3.1-8B-Instruct \
+    --data_path dataset/dataset_1_train_dataset/llama-3.1-medprm-reward-training-set/1_train_dataset.json \
+    --output_dir ./output/medprm_model \
+    --num_train_epochs 3 \
+    --per_device_train_batch_size 1 \
+    --gradient_accumulation_steps 64 \
+    --learning_rate 2e-6 \
+    --warmup_ratio 0.03 \
+    --lr_scheduler_type cosine \
+    --bf16 True \
+    --logging_steps 1 \
+    --save_strategy epoch \
+    --save_total_limit 3 \
+    --model_max_length 4096 \
+    --report_to wandb</pre>
+
+        <h3>학습 파라미터 상세</h3>
+        <table>
+            <tr>
+                <th>파라미터</th>
+                <th>값</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td><code>model_name_or_path</code></td>
+                <td>Llama-3.1-8B-Instruct</td>
+                <td>기본 모델</td>
+            </tr>
+            <tr>
+                <td><code>learning_rate</code></td>
+                <td>2e-6</td>
+                <td>학습률</td>
+            </tr>
+            <tr>
+                <td><code>num_train_epochs</code></td>
+                <td>3</td>
+                <td>에폭 수</td>
+            </tr>
+            <tr>
+                <td><code>batch_size</code></td>
+                <td>1</td>
+                <td>배치 크기</td>
+            </tr>
+            <tr>
+                <td><code>gradient_accumulation</code></td>
+                <td>64</td>
+                <td>그래디언트 누적 (effective batch = 64)</td>
+            </tr>
+            <tr>
+                <td><code>bf16</code></td>
+                <td>True</td>
+                <td>BFloat16 정밀도</td>
+            </tr>
+            <tr>
+                <td><code>lr_scheduler</code></td>
+                <td>cosine</td>
+                <td>학습률 스케줄러</td>
+            </tr>
+            <tr>
+                <td><code>warmup_ratio</code></td>
+                <td>0.03</td>
+                <td>워밍업 비율 (3%)</td>
+            </tr>
+        </table>
+
+        <h3>학습 유형</h3>
+        <div class="info-box">
+            <strong>1. PRM 학습 (Process Reward Model)</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>RAG-AS-A-JUDGE로 생성된 step-wise 레이블 사용</li>
+                <li>각 추론 단계의 정확성을 평가하도록 학습</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <strong>2. Policy SFT (Supervised Fine-Tuning)</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Rejection Sampling으로 선택된 고품질 솔루션 사용</li>
+                <li>높은 PRM 점수를 받은 솔루션으로만 학습</li>
+            </ul>
+        </div>
+
+        <h3>실행 방법</h3>
+        <pre># 단일 GPU
+python python/2_training.py [arguments]
+
+# 멀티 GPU (Accelerate)
+accelerate launch python/2_training.py [arguments]
+
+# 또는 제공된 스크립트 사용
+bash scripts/2_training.sh</pre>
+    </section>
+
+    <!-- 7. Inference -->
+    <section class="section" id="inference">
+        <h2><span class="step-number">7</span> 추론 방법</h2>
+
+        <h3>추론 스크립트 (scripts/4_scoring_PRM.sh)</h3>
+        <pre>#!/bin/bash
+
+# PRM 점수 계산 설정
+MODEL_PATH="./output/medprm_model"
+DATA_SOURCE="medqa"
+USE_RAG=true
+USE_ORM=false
+MAX_TOKEN_LEN=4096
+GPU_IDS="0,1,2,3"
+
+python python/4_scoring_PRM.py \
+    --model_name_or_path $MODEL_PATH \
+    --data_source $DATA_SOURCE \
+    --input_file dataset/dataset_2_solutions/${DATA_SOURCE}_solutions.json \
+    --output_dir ./output/scores \
+    --use_rag $USE_RAG \
+    --use_orm $USE_ORM \
+    --max_token_len $MAX_TOKEN_LEN \
+    --gpu_ids $GPU_IDS</pre>
+
+        <h3>Test-time Scaling 전략</h3>
+
+        <div class="pipeline-diagram">
+            <h4 style="color: #1a365d; margin-bottom: 20px;">Best-of-N Strategy</h4>
+            <div class="pipeline-flow">
+                <div class="pipeline-box">Question</div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box highlight">Generate N<br>Solutions</div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box highlight">PRM Score<br>Each</div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box success">Select Best</div>
+            </div>
+        </div>
+
+        <div class="pipeline-diagram">
+            <h4 style="color: #1a365d; margin-bottom: 20px;">SC+RM Strategy (Self-Consistency + Reward Model)</h4>
+            <div class="pipeline-flow">
+                <div class="pipeline-box">Question</div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box highlight">Generate N<br>Solutions</div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box highlight">PRM Weight<br>+ Voting</div>
+                <span class="arrow">→</span>
+                <div class="pipeline-box success">Weighted<br>Majority</div>
+            </div>
+        </div>
+
+        <h3>주요 파라미터</h3>
+        <table>
+            <tr>
+                <th>파라미터</th>
+                <th>설명</th>
+                <th>권장값</th>
+            </tr>
+            <tr>
+                <td><code>--use_rag</code></td>
+                <td>RAG 기반 검증 활성화</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td><code>--use_orm</code></td>
+                <td>Outcome Reward Model 사용</td>
+                <td>False (PRM 사용 시)</td>
+            </tr>
+            <tr>
+                <td><code>--max_token_len</code></td>
+                <td>최대 토큰 길이</td>
+                <td>4096 (RAG 사용 시)</td>
+            </tr>
+            <tr>
+                <td><code>--num_samples</code></td>
+                <td>Best-of-N의 N 값</td>
+                <td>8, 16, 32</td>
+            </tr>
+        </table>
+
+        <h3>실행 예시</h3>
+        <pre># Best-of-N (N=16) 추론
+python python/4_scoring_PRM.py \
+    --model_name_or_path ./output/medprm_model \
+    --data_source medqa \
+    --num_samples 16 \
+    --use_rag true
+
+# SC+RM 추론
+python python/4_scoring_PRM.py \
+    --model_name_or_path ./output/medprm_model \
+    --data_source medqa \
+    --strategy sc_rm \
+    --num_samples 16</pre>
+    </section>
+
+    <!-- 8. Getting Results -->
+    <section class="section" id="results">
+        <h2><span class="step-number">8</span> 결과 도출</h2>
+
+        <h3>결과 파일 형식</h3>
+        <pre># 출력 파일명 패턴
+{model_name}_{data_source}_sol{num_samples}_{input_name}.json
+
+# 예시
+medprm_medqa_sol16_test.json</pre>
+
+        <h3>결과 JSON 구조</h3>
+        <pre>{
+    "question_id": "q_001",
+    "question": "A 45-year-old patient presents with...",
+    "options": ["A. ...", "B. ...", "C. ...", "D. ..."],
+    "correct_answer": "B",
+    "solutions": [
+        {
+            "solution": "Step 1: ... Step 2: ... Final Answer: B",
+            "prm_score": 0.92,
+            "steps_scores": [0.95, 0.89, 0.91]
+        },
+        ...
+    ],
+    "best_solution_idx": 0,
+    "predicted_answer": "B",
+    "is_correct": true
+}</pre>
+
+        <h3>성능 평가 실행</h3>
+        <pre># 정확도 계산
+python python/evaluate.py \
+    --input_file ./output/scores/medprm_medqa_sol16_test.json \
+    --output_file ./output/results/accuracy_report.json
+
+# 결과 출력 예시
+# {
+#     "dataset": "medqa",
+#     "model": "medprm",
+#     "num_samples": 16,
+#     "accuracy": 0.8035,
+#     "total_questions": 1273,
+#     "correct": 1023
+# }</pre>
+
+        <h3>기대 성능 (MedQA 기준)</h3>
+        <table>
+            <tr>
+                <th>전략</th>
+                <th>샘플 수</th>
+                <th>정확도</th>
+            </tr>
+            <tr>
+                <td>Greedy</td>
+                <td>1</td>
+                <td>~74%</td>
+            </tr>
+            <tr>
+                <td>Best-of-8</td>
+                <td>8</td>
+                <td>~77%</td>
+            </tr>
+            <tr>
+                <td>Best-of-16</td>
+                <td>16</td>
+                <td>~79%</td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold;">Best-of-32 + RAG</td>
+                <td style="font-weight: bold;">32</td>
+                <td style="font-weight: bold; color: #059669;">80.35%</td>
+            </tr>
+        </table>
+
+        <div class="success-box">
+            <strong>핵심 성과:</strong> 8B 파라미터 모델로 MedQA에서 80% 이상 달성한 최초의 모델
+        </div>
+    </section>
+
+    <!-- 9. Hyperparameters -->
+    <section class="section" id="hyperparams">
+        <h2><span class="step-number">9</span> 하이퍼파라미터 상세</h2>
+
+        <h3>전체 하이퍼파라미터 요약</h3>
+
+        <table>
+            <tr>
+                <th>카테고리</th>
+                <th>파라미터</th>
+                <th>값</th>
+            </tr>
+            <tr>
+                <td rowspan="3">모델</td>
+                <td>Base Model</td>
+                <td>Llama-3.1-8B-Instruct</td>
+            </tr>
+            <tr>
+                <td>Max Sequence Length</td>
+                <td>4096</td>
+            </tr>
+            <tr>
+                <td>Precision</td>
+                <td>BFloat16</td>
+            </tr>
+            <tr>
+                <td rowspan="5">학습</td>
+                <td>Learning Rate</td>
+                <td>2e-6</td>
+            </tr>
+            <tr>
+                <td>Epochs</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>Batch Size</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>Gradient Accumulation</td>
+                <td>64</td>
+            </tr>
+            <tr>
+                <td>Effective Batch Size</td>
+                <td>64</td>
+            </tr>
+            <tr>
+                <td rowspan="2">스케줄러</td>
+                <td>Type</td>
+                <td>Cosine</td>
+            </tr>
+            <tr>
+                <td>Warmup Ratio</td>
+                <td>0.03 (3%)</td>
+            </tr>
+            <tr>
+                <td rowspan="3">추론</td>
+                <td>Best-of-N</td>
+                <td>32 (최적)</td>
+            </tr>
+            <tr>
+                <td>Temperature</td>
+                <td>0.7</td>
+            </tr>
+            <tr>
+                <td>Top-p</td>
+                <td>0.95</td>
+            </tr>
+        </table>
+
+        <h3>환경 요구사항</h3>
+        <div class="info-box">
+            <ul style="margin-left: 20px;">
+                <li><strong>GPU:</strong> NVIDIA A100 80GB 권장 (40GB 이상 필수)</li>
+                <li><strong>RAM:</strong> 64GB 이상</li>
+                <li><strong>Storage:</strong> 100GB 이상 (모델 + 데이터)</li>
+                <li><strong>CUDA:</strong> 12.4</li>
+            </ul>
+        </div>
+
+        <h3>전체 실행 명령어 요약</h3>
+        <pre># ===============================
+# Med-PRM 전체 파이프라인 실행
+# ===============================
+
+# 1. 환경 설정
+conda env create -f environment.yml
+conda activate med-prm
+
+# 2. 데이터 다운로드
+python python/0_preparing.py
+
+# 3. PRM 학습
+bash scripts/2_training.sh
+
+# 4. 추론 및 평가
+bash scripts/4_scoring_PRM.sh
+
+# 5. 결과 확인
+python python/evaluate.py --input_file ./output/scores/*.json</pre>
+    </section>
+
+</div>
+
+<footer>
+    <p>Med-PRM Code Implementation Guide</p>
+    <p>Based on: <a href="https://github.com/eth-medical-ai-lab/Med-PRM" style="color: #2563eb;">https://github.com/eth-medical-ai-lab/Med-PRM</a></p>
+    <p style="margin-top: 10px; color: #94a3b8;">Generated for educational purposes</p>
+</footer>
+
+</body>
+</html>
