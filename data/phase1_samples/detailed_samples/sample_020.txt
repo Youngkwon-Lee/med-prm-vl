@@ -1,0 +1,47 @@
+================================================================================
+Sample ID: 20
+Question ID: 9068
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 33-year-old woman, gravida 2, para 1, at 24 weeks' gestation is brought to the emergency department by her husband for lethargy, nausea, and vomiting for 4 days. She returned from a trip to South Asia 2 weeks ago. Her immunizations are up-to-date and she has never received blood products. Her temperature is 38.9°C (102°F). She is not oriented to person, place, and time. Examination shows jaundice and mild asterixis. Her prothrombin time is 18 sec (INR=2.0), serum alanine aminotransferase is 3911 U/L, and serum aspartate aminotransferase is 3724 U/L. This patient's current condition is most likely associated with increased titers of which of the following serum studies?
+
+OPTIONS:
+  A. Anti-HBc IgM
+  B. HBsAg
+  C. Anti-HEV IgM
+  D. Anti-HCV IgG
+  E. Anti-HAV IgM
+
+Correct Answer: C
+Model Answer: C
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.812
+Step 1: The patient is a 33-year-old pregnant woman presenting with symptoms of lethargy, nausea, and vomiting, along with jaundice and mild asterixis. These symptoms, combined with an elevated temperature and altered mental status, suggest a severe acute illness. ки
+
+[Step 2] PRM: hard=1, soft=0.812
+Step 2: The patient's laboratory results show significantly elevated liver enzymes (ALT = 3911 U/L, AST = 3724 U/L), indicating liver injury. The prothrombin time is also elevated (INR = 2.0), suggesting impaired liver function. ки
+
+[Step 3] PRM: hard=1, soft=0.750
+Step 3: The patient's recent travel history to South Asia and the presence of symptoms such as jaundice and liver enzyme elevation point towards a viral hepatitis infection as the likely cause of her condition. ки
+
+[Step 4] PRM: hard=1, soft=0.812
+Step 4: The patient is pregnant, which makes her more susceptible to severe illness from certain viral infections. Hepatitis E is a major concern in pregnant women, particularly in areas where it is endemic, such as South Asia. ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5: The patient's symptoms and laboratory results are most consistent with acute Hepatitis E infection, which is typically associated with the presence of Anti-HEV IgM antibodies.  The answer is C. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

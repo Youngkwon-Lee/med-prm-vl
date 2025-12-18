@@ -1,0 +1,53 @@
+================================================================================
+Sample ID: 10
+Question ID: 9547
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 44-year-old woman comes to the emergency department after waking up with facial swelling and with difficulties speaking and swallowing. She states that she does not have allergies or recently had insect bites. She has a 4-year history of hypertension and type 2 diabetes mellitus controlled with medication. Her pulse is 110/min, respirations are 20/min, and blood pressure is 140/90 mm Hg. Pulse oximetry on room air shows an oxygen saturation of 97%. On physical exam, she appears uncomfortable, with notable swelling of the lips and tongue. The remainder of the examination shows no abnormalities. Serum C4 levels are within normal limits. Which of the following is the most likely underlying mechanism of this patient's symptoms?
+
+OPTIONS:
+  A. Type 2 hypersensitivity reaction
+  B. IgE-mediated histamine release
+  C. Anaphylactoid reaction
+  D. Immune-complex deposition
+  E. Impaired bradykinin metabolism
+
+Correct Answer: E
+Model Answer: C
+Is Correct: False
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.625
+Step 1: The patient presents with facial swelling, difficulties speaking, and swallowing, but no history of allergies or insect bites. This suggests an acute onset of symptoms not related to an allergic reaction or an insect sting. ки
+
+[Step 2] PRM: hard=1, soft=0.250
+Step 2: The patient's history of hypertension and type 2 diabetes mellitus, controlled with medication, indicates potential comorbidities that could affect her condition. However, her presentation does not seem directly related to her chronic conditions. ки
+
+[Step 3] PRM: hard=1, soft=0.375
+Step 3: The physical examination reveals swelling of the lips and tongue, which is a key finding. The rest of the examination is unremarkable, suggesting that the symptoms are localized to the facial area. ки
+
+[Step 4] PRM: hard=1, soft=0.438
+Step 4: The serum C4 levels are within normal limits. C4 is a component of the complement system, which plays a role in the immune response. Low levels of C4 would suggest an immune complex deposition or other immune-mediated reaction, but normal C4 levels indicate that this is unlikely. ки
+
+[Step 5] PRM: hard=1, soft=0.625
+Step 5: Given the acute onset of symptoms, lack of allergic history, and normal C4 levels, the most likely explanation is a condition that does not involve an immune-mediated response. ки
+
+[Step 6] PRM: hard=1, soft=0.188
+Step 6: An anaphylactoid reaction occurs without the involvement of IgE or immune complexes, and is characterized by the release of substances like bradykinin, which causes blood vessels to dilate and leads to increased permeability and swelling. ки
+
+[Step 7] PRM: hard=0, soft=0.000
+Step 7: The patient's symptoms of facial swelling, increased heart rate, and normal C4 levels are consistent with an anaphylactoid reaction.  The answer is C. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

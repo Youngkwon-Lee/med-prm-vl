@@ -1,0 +1,50 @@
+================================================================================
+Sample ID: 13
+Question ID: 1211
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 17-year-old boy comes to the physician because of a nonpruritic rash on his chest for 1 week. He returned from a trip to Puerto Rico 10 days ago. He started using a new laundry detergent after returning. He has type 1 diabetes mellitus controlled with insulin. His mother has Hashimoto thyroiditis, and his sister has severe facial acne. Examination of the skin shows multiple, nontender, round, hypopigmented macules on the chest and trunk. There is fine scaling when the lesions are scraped with a spatula. Which of the following is the most likely underlying mechanism of this patient's symptoms?
+
+OPTIONS:
+  A. Autoimmune destruction of melanocytes
+  B. Increased sebum production
+  C. Increased growth of Malassezia globosa
+  D. Antigen uptake by Langerhans cells
+  E. Infection with Trichophyton rubrum
+
+Correct Answer: C
+Model Answer: C
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.562
+Step 1:  The patient presents with a nonpruritic rash on his chest for 1 week after returning from a trip to Puerto Rico and starting a new laundry detergent. This information suggests that the rash may be related to an environmental or external factor rather than an internal or genetic condition. ки
+
+[Step 2] PRM: hard=1, soft=0.938
+Step 2:  The patient's rash is described as multiple, nontender, round, hypopigmented macules on the chest and trunk, with fine scaling when scraped with a spatula. This type of description is often associated with a superficial fungal infection. ки
+
+[Step 3] PRM: hard=1, soft=0.750
+Step 3:  Given the patient's recent travel and new laundry detergent, it's possible that the rash is related to an environmental exposure or a new product he is using. ки
+
+[Step 4] PRM: hard=1, soft=0.875
+Step 4:  Considering the characteristics of the rash, such as the fine scaling and round, hypopigmented macules, the most likely cause is a superficial fungal infection. ки
+
+[Step 5] PRM: hard=1, soft=0.875
+Step 5:  The most common cause of such superficial fungal infections is an overgrowth of the yeast Malassezia globosa, which is a natural inhabitant of the skin but can cause problems when it grows excessively. ки
+
+[Step 6] PRM: hard=1, soft=1.000
+Step 6:  Therefore, the underlying mechanism of the patient's symptoms is most likely related to the overgrowth of Malassezia globosa due to an imbalance in the skin's natural environment.  The answer is C. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

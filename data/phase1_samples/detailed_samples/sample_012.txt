@@ -1,0 +1,47 @@
+================================================================================
+Sample ID: 12
+Question ID: 1243
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 47-year-old man is brought to the emergency department 1 hour after injuring his genital area when he fell astride his backyard fence. He was trimming a tree from the fence when he lost his balance. His vital signs are within normal limits. Examination shows blood at the urethral meatus, perineal ecchymoses, and a scrotal hematoma. An x-ray of the pelvis shows swelling of the soft tissue but no other abnormalities. Which part of the urinary tract is most likely damaged in this patient?
+
+OPTIONS:
+  A. Penile urethra
+  B. Anterior bladder wall
+  C. Bulbous urethra
+  D. Membranous urethra
+  E. Prostatic urethra
+
+Correct Answer: C
+Model Answer: C
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.875
+Step 1:  The patient's symptoms and examination results suggest a urethral injury, given the presence of blood at the urethral meatus and swelling of the soft tissues in the pelvic area. ки
+
+[Step 2] PRM: hard=1, soft=0.938
+Step 2:  The mechanism of injury, where the patient fell astride the fence, suggests that the injury is most likely to the urethra, given the direct pressure on the perineum. ки
+
+[Step 3] PRM: hard=1, soft=0.750
+Step 3:  The presence of a scrotal hematoma indicates that the injury has caused bleeding in the scrotal area, which is consistent with an injury to the structures in that region. ки
+
+[Step 4] PRM: hard=1, soft=1.000
+Step 4:  The location of the injury is key to determining which part of the urinary tract is most likely damaged. The bulbous urethra is located in the perineum, which is the region between the scrotum and the anus. ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5:  Given the patient's symptoms and examination results, particularly the blood at the urethral meatus and the presence of a scrotal hematoma, the most likely location of the injury is the bulbous urethra.  The answer is C. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

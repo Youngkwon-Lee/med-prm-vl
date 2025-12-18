@@ -1,0 +1,53 @@
+================================================================================
+Sample ID: 9
+Question ID: 247
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 45-year-old immigrant presents with unintentional weight loss, sleep hyperhidrosis, and a persistent cough. He says these symptoms have been present for quite some time. Upon imaging, many granulomas in the upper lobes are present. It is noted that these apical granulomas have centers of necrosis that appear cheese-like in appearance. Encircling the area of necrosis are large cells with cytoplasms pale in color. Of the following surface markers, which one is specific for these cells?
+
+OPTIONS:
+  A. CD8
+  B. CD4
+  C. CD3
+  D. CD14
+  E. CD20
+
+Correct Answer: D
+Model Answer: D
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.688
+Step 1:  The patient's presentation of unintentional weight loss, sleep hyperhidrosis, and a persistent cough, along with the imaging findings of granulomas with necrotic centers in the upper lobes of the lungs, is suggestive of tuberculosis (TB), a chronic bacterial infection caused by Mycobacterium tuberculosis. ки
+
+[Step 2] PRM: hard=1, soft=0.625
+Step 2:  The granulomas with necrotic centers, particularly those resembling cheese-like appearance, are characteristic of TB. This type of granuloma is known as caseating granulomas. ки
+
+[Step 3] PRM: hard=1, soft=0.688
+Step 3:  The cells encircling the area of necrosis, with pale cytoplasm, are histiocytes, specifically a subset known as epithelioid cells, which play a key role in the immune response against the infection. ки
+
+[Step 4] PRM: hard=1, soft=0.750
+Step 4:  Epithelioid cells are a type of activated macrophage, which are derived from monocytes and are part of the innate immune response. ки
+
+[Step 5] PRM: hard=1, soft=0.938
+Step 5:  Given the role of epithelioid cells in the immune response, the surface marker specific for these cells would be a marker for monocytes/macrophages. ки
+
+[Step 6] PRM: hard=1, soft=1.000
+Step 6:  Among the provided options, CD14 is a surface marker for monocytes/macrophages, which are the precursors to epithelioid cells. ки
+
+[Step 7] PRM: hard=1, soft=1.000
+Step 7:  Therefore, the surface marker specific for the cells described is CD14.  The answer is D. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

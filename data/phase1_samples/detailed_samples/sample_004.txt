@@ -1,0 +1,53 @@
+================================================================================
+Sample ID: 4
+Question ID: 4435
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 78-year-old Caucasian male actor presents to your office complaining of a dry, non-productive cough. He has a history of hypertension, diabetes, and coronary artery disease and he follows a complicated regimen of medications to treat his multiple co-morbidities. Which of the following medications is most likely to be associated with his chief complaint?
+
+OPTIONS:
+  A. Aspirin
+  B. Lisinopril
+  C. Hydrochlorothiazide
+  D. Metoprolol
+  E. Nifedipine
+
+Correct Answer: B
+Model Answer: E
+Is Correct: False
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.812
+Step 1:  The patient's chief complaint is a dry, non-productive cough, and we need to determine which medication might be associated with this symptom. To do so, we should consider the side effect profiles of the medications listed. ки
+
+[Step 2] PRM: hard=1, soft=0.938
+Step 2:  Aspirin, option A, is primarily associated with gastrointestinal side effects, such as stomach upset and bleeding, rather than respiratory issues like a cough. ки
+
+[Step 3] PRM: hard=0, soft=0.000
+Step 3:  Lisinopril, option B, is an ACE inhibitor used to treat hypertension and heart failure. While it can cause cough as a side effect, it's more common to cause a productive cough. ки
+
+[Step 4] PRM: hard=1, soft=0.062
+Step 4:  Hydrochlorothiazide, option C, is a diuretic used to treat hypertension and edema. It can cause dehydration, electrolyte imbalances, and other side effects but is less commonly associated with a dry, non-productive cough. ки
+
+[Step 5] PRM: hard=0, soft=0.000
+Step 5:  Metoprolol, option D, is a beta-blocker used to treat hypertension, angina, and heart failure. While it has a wide range of side effects, a dry, non-productive cough is not commonly associated with this medication. ки
+
+[Step 6] PRM: hard=0, soft=0.000
+Step 6:  Nifedipine, option E, is a calcium channel blocker used to treat hypertension and angina. One of the common side effects of calcium channel blockers, including nifedipine, is a dry, non-productive cough. ки
+
+[Step 7] PRM: hard=0, soft=0.000
+Step 7:  Given the patient's symptoms and medication regimen, the medication most likely associated with his dry, non-productive cough is a calcium channel blocker, particularly nifedipine.  The answer is E. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

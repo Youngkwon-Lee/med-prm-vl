@@ -1,0 +1,50 @@
+================================================================================
+Sample ID: 1
+Question ID: 2447
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 40-year-old male with Down syndrome is brought to your clinic by his mother. She reports that over the past few months he has started having difficulty managing his daily routine at his assisted-living facility and no longer seems like himself. She says that last week he wandered away from the facility and was brought back by police. Additionally, he has stopped taking his regular antiepileptic medication, and she is concerned that he might have a seizure. TSH is checked and is normal. Which of the following is most likely to be responsible for this man's current presentation?
+
+OPTIONS:
+  A. Expansion of trinucleotide repeats
+  B. Abnormal protein metabolism
+  C. Hormone deficiency
+  D. Premature degradation of a protein
+  E. Nutritional deficiency
+
+Correct Answer: B
+Model Answer: D
+Is Correct: False
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.125
+Step 1:  The patient is a 40-year-old male with Down syndrome who is experiencing a decline in functioning, increased wanderlust, and stopped taking his medication. This suggests that the underlying condition may be related to his Down syndrome, as people with Down syndrome are at a higher risk for various age-related conditions. ки
+
+[Step 2] PRM: hard=1, soft=0.188
+Step 2:  Down syndrome is a genetic disorder caused by an extra copy of chromosome 21 (or a significant part of it), which leads to various metabolic changes. One of the metabolic changes associated with Down syndrome is the increased risk of amyloid precursor protein (APP) accumulation due to an extra copy of the APP gene. ки
+
+[Step 3] PRM: hard=1, soft=0.125
+Step 3:  As people with Down syndrome age, the accumulation of amyloid beta peptides from the APP protein can lead to the deposition of amyloid plaques in the brain, a hallmark of Alzheimer's disease. ки
+
+[Step 4] PRM: hard=0, soft=0.000
+Step 4:  Alzheimer's disease, in turn, is associated with premature degradation of the amyloid precursor protein (APP) due to the abnormal metabolism of the beta-secretase and gamma-secretase enzymes, which are responsible for the cleavage of the APP protein into toxic amyloid beta peptides. ки
+
+[Step 5] PRM: hard=0, soft=0.000
+Step 5:  The symptoms described, including the decline in functioning, increased wanderlust, and stopped medication, are consistent with the progression of Alzheimer's disease in a person with Down syndrome. ки
+
+[Step 6] PRM: hard=0, soft=0.000
+Step 6:  Based on this understanding, the most likely cause of the patient's presentation is related to the premature degradation of the protein APP, which is associated with the progression of Alzheimer's disease in individuals with Down syndrome.  The answer is D. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

@@ -1,0 +1,47 @@
+================================================================================
+Sample ID: 14
+Question ID: 2158
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 10-year-old boy is brought to the pediatric clinic because of a sore throat of 1-week duration. He also has a cough and fever. He has pain when swallowing and sometimes water regurgitates from his nose when drinking. He was diagnosed with acute tonsillitis by his primary care physician 1 month ago, for which he received a week-long course of amoxicillin. His immunization status is unknown as he recently moved to the US from Asia. On examination, he is alert and oriented to time, place, and person. On inspection of his oral cavity, an edematous tongue with a grey-white membrane on the soft palate and tonsils is noted. The neck is diffusely swollen with bilateral tender cervical lymphadenopathy. Which of the following is the cause of this patient’s condition and could have been prevented through vaccinations in childhood?
+
+OPTIONS:
+  A. Streptococcus pyogenes
+  B. Corynebacterium diphtheriae
+  C. Haemophilus influenzae b
+  D. Agranulocytosis
+  E. Epstein Barr virus
+
+Correct Answer: B
+Model Answer: B
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=1.000
+Step 1:  The patient presents with symptoms of a sore throat, cough, fever, and pain when swallowing, which have been ongoing for 1 week, and a history of a similar episode in the past month. These symptoms, along with the physical examination findings of an edematous tongue, a grey-white membrane on the soft palate and tonsils, and diffusely swollen neck with bilateral tender cervical lymphadenopathy, suggest a severe infection. ки
+
+[Step 2] PRM: hard=1, soft=0.938
+Step 2:  The presence of a grey-white membrane on the soft palate and tonsils is particularly indicative of diphtheria, which is characterized by a pseudomembrane covering the tonsils and the soft palate. This type of membrane is not typically seen in streptococcal pharyngitis or other viral infections. ки
+
+[Step 3] PRM: hard=1, soft=0.938
+Step 3:  Diphtheria is caused by Corynebacterium diphtheriae and is highly contagious. The patient's recent immigration from Asia increases the likelihood of exposure to this bacterium, which is prevalent in many parts of the world. ки
+
+[Step 4] PRM: hard=1, soft=0.875
+Step 4:  Vaccination against diphtheria is a key preventive measure, especially in children. The diphtheria, tetanus, and pertussis (DTaP) vaccine is typically administered in multiple doses during childhood, with a booster dose in late adolescence. ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5:  Given the clinical presentation and history of the patient, along with the fact that the condition could have been prevented through vaccinations in childhood, the cause of this patient's condition is Corynebacterium diphtheriae.  The answer is B. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

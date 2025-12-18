@@ -1,0 +1,50 @@
+================================================================================
+Sample ID: 3
+Question ID: 4879
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+You are reading through a recent article that reports significant decreases in all-cause mortality for patients with malignant melanoma following treatment with a novel biological infusion. Which of the following choices refers to the probability that a study will find a statistically significant difference when one truly does exist?
+
+OPTIONS:
+  A. Type I error
+  B. Type II error
+  C. Power
+  D. Confidence interval
+  E. p-value
+
+Correct Answer: C
+Model Answer: C
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.938
+Step 1: Understand the definitions of the given choices to identify which one refers to the probability that a study will find a statistically significant difference when one truly does exist. ки
+
+[Step 2] PRM: hard=1, soft=0.938
+Step 2: A Type I error occurs when a study finds a statistically significant difference when there is no real difference, while a Type II error occurs when a study fails to find a statistically significant difference when there is a real difference. ки
+
+[Step 3] PRM: hard=1, soft=0.938
+Step 3: The probability that a study will find a statistically significant difference when one truly does exist is related to the concept of the power of a test, which is the ability of the test to detect an effect when there is an effect to be detected. ки
+
+[Step 4] PRM: hard=1, soft=1.000
+Step 4: A confidence interval is a range of values within which a population parameter is likely to lie, but it is not directly related to the probability of finding a statistically significant difference. ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5: The p-value is the probability of observing an effect as extreme or more extreme than the one observed in the study, given that there is no real effect, but it is not the probability of finding a statistically significant difference when there is a real difference. ки
+
+[Step 6] PRM: hard=1, soft=1.000
+Step 6: Based on the definitions, power is the correct choice because it is the probability that a study will find a statistically significant difference when one truly does exist.  The answer is C. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

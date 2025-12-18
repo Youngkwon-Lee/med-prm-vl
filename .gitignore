@@ -1,8 +1,11 @@
-# Data
-data/
-*.json
-*.xlsx
-*.csv
+# Data - HuggingFace cache ignored
+# But allow phase1_samples results
+!data/phase1_samples/
+data/phase1_samples/.gitkeep
+
+# Large raw data
+*.parquet
+*.arrow
 
 # Python
 __pycache__/

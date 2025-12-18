@@ -1,0 +1,50 @@
+================================================================================
+Sample ID: 6
+Question ID: 2859
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 27-year-old woman presents to the clinic with a runny nose and productive cough for the past two weeks. She also complains of headaches and lethargy. She was started on sertraline after she was diagnosed with major depressive disorder 2 months ago and had the dosage periodically increased to achieve symptom control. She is afraid of starting any other medication because of possible side-effects or life-threatening drug interactions. What advice is the most accurate regarding possible complication to her current pharmacotherapy?
+
+OPTIONS:
+  A. Migraine medication can trigger a life-threatening complication.
+  B. Sertraline cannot be used concurrently with neuroleptics
+  C. Monoamine-oxidase-inhibitors are safe for concurrent use.
+  D. Over-the-counter
+  E. Treat life-threatening complication with gradual drug withdrawal.
+
+Correct Answer: A
+Model Answer: A
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.688
+Step 1:  The patient has been diagnosed with major depressive disorder and has been on sertraline with gradually increased dosages to achieve symptom control. This indicates that she is currently being treated for depression with an SSRI (Selective Serotonin Reuptake Inhibitor). ки
+
+[Step 2] PRM: hard=1, soft=0.562
+Step 2:  Given her symptoms of runny nose, productive cough, headaches, and lethargy, it is likely that she may be experiencing a side effect related to her current medication, sertraline, or possibly an interaction with another medication. ки
+
+[Step 3] PRM: hard=1, soft=0.438
+Step 3:  One potential side effect or interaction to consider is the risk of serotonin syndrome, especially when combining certain medications that increase serotonin levels, such as SSRIs and other medications that also increase serotonin levels. ки
+
+[Step 4] PRM: hard=1, soft=0.375
+Step 4:  Serotonin syndrome can occur when there is an excessive amount of serotonin in the body. It is a potentially life-threatening complication that can cause symptoms such as agitation, confusion, rapid heart rate, changes in blood pressure, sweating, dilated pupils, and in severe cases, coma or even death. ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5:  An over-the-counter (OTC) medication that can potentially cause serotonin syndrome is a triptan, which is a migraine medication that works by increasing serotonin levels in the brain to cause vasoconstriction of blood vessels and relieve migraine pain. ки
+
+[Step 6] PRM: hard=1, soft=1.000
+Step 6:  Considering the information above, the advice that is most accurate regarding a possible complication to her current pharmacotherapy is that migraine medication can trigger a life-threatening complication.  The answer is A. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

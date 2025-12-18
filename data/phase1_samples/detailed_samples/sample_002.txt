@@ -1,0 +1,53 @@
+================================================================================
+Sample ID: 2
+Question ID: 1132
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 60-year-old African-American female presents to your office complaining of dysuria, paresthesias, and blurry vision. Her body mass index is 37.2 kg/m2. Which of the following drugs would most significantly increase the levels of C-peptide in the blood when administered to this patient?
+
+OPTIONS:
+  A. Metformin
+  B. Insulin
+  C. Glipizide
+  D. Acarbose
+  E. NPH
+
+Correct Answer: C
+Model Answer: C
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.625
+Step 1:  The patient's symptoms of dysuria, paresthesias, and blurry vision, along with a body mass index of 37.2 kg/m2, are suggestive of diabetic neuropathy and potentially diabetes mellitus, which is a common condition in African-American females. ки
+
+[Step 2] PRM: hard=1, soft=0.500
+Step 2:  The question is asking about a drug that would increase C-peptide levels in the blood, which is a marker of endogenous insulin production. ки
+
+[Step 3] PRM: hard=1, soft=0.750
+Step 3:  C-peptide levels typically decrease in patients with type 1 diabetes mellitus due to the absence of functioning beta cells in the pancreas. ки
+
+[Step 4] PRM: hard=1, soft=0.875
+Step 4:  However, in patients with type 2 diabetes mellitus, who have residual pancreatic function, the administration of certain medications can stimulate the release of insulin from the remaining beta cells, thereby increasing C-peptide levels. ки
+
+[Step 5] PRM: hard=1, soft=0.875
+Step 5:  Among the listed options, Glipizide is a sulfonylurea, which stimulates insulin release from the pancreas by binding to ATP-sensitive potassium channels, thereby depolarizing the beta cells and increasing insulin secretion. ки
+
+[Step 6] PRM: hard=1, soft=1.000
+Step 6:  This mechanism of action would lead to an increase in both insulin and C-peptide levels in the blood. ки
+
+[Step 7] PRM: hard=1, soft=1.000
+Step 7:  Therefore, when administered to this patient, Glipizide would most significantly increase the levels of C-peptide in the blood.  The answer is C. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

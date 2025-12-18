@@ -1,0 +1,53 @@
+================================================================================
+Sample ID: 5
+Question ID: 4080
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+An x-ray of the chest is conducted and shown below. Which of the following is the most appropriate next step in management?
+
+OPTIONS:
+  A. Perform interferon-γ release assay
+  B. Administer isoniazid for 9 months
+  C. Administer isoniazid + rifampin + pyrazinamide + ethambutol
+  D. Repeat PPD skin test
+  E. Obtain a chest CT scan
+
+Correct Answer: B
+Model Answer: C
+Is Correct: False
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.125
+Step 1:  To determine the most appropriate next step in management, the presence of any abnormalities on the x-ray is crucial. The given information does not describe the x-ray findings, so we must consider the general approach for interpreting chest X-rays and managing potential pulmonary conditions, especially those related to tuberculosis (TB), as TB is often evaluated through chest X-rays. ки
+
+[Step 2] PRM: hard=0, soft=0.000
+Step 2:  The interferon-γ release assay (IGRA) is used to diagnose latent or active TB infection, particularly in individuals with a positive PPD (purified protein derivative) skin test result or those who are immunocompromised. However, without evidence of a positive PPD skin test result or active TB symptoms, this test might not be the immediate next step without further context. ки
+
+[Step 3] PRM: hard=1, soft=0.062
+Step 3:  Administering isoniazid for 9 months (Option B) is a common treatment for latent TB infection, especially in individuals who have a positive PPD skin test result. However, the decision to start isoniazid monotherapy is typically based on a confirmed diagnosis of latent TB. ки
+
+[Step 4] PRM: hard=0, soft=0.000
+Step 4:  The combination regimen of isoniazid + rifampin + pyrazinamide + ethambutol (Option C) is a first-line treatment for active TB disease. This would be an appropriate next step if the x-ray suggests active pulmonary TB, which would require immediate treatment with a full regimen to prevent disease progression. ки
+
+[Step 5] PRM: hard=0, soft=0.000
+Step 5:  Repeating the PPD skin test (Option D) would not be the most immediate next step unless the initial result was unclear or in cases where the patient's immune status has changed significantly. This test is primarily useful in conjunction with the QuantiFERON test for diagnosing latent or active TB infection. ки
+
+[Step 6] PRM: hard=0, soft=0.000
+Step 6:  Obtaining a chest CT scan (Option E) might be considered if the chest X-ray is inconclusive, particularly if it does not show any clear signs of TB but other pulmonary conditions are suspected. However, if the chest X-ray does show signs suggestive of TB, further imaging would not be the immediate next step. ки
+
+[Step 7] PRM: hard=0, soft=0.000
+Step 7:  Given these considerations, if the x-ray findings suggest active TB disease, the most appropriate next step is to initiate treatment with a full regimen to prevent disease progression. Therefore, the answer is C. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

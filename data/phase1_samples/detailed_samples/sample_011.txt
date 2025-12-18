@@ -1,0 +1,50 @@
+================================================================================
+Sample ID: 11
+Question ID: 7035
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+Two weeks after undergoing an allogeneic skin graft procedure for extensive full-thickness burns involving his left leg, a 41-year-old man develops redness and swelling over the graft site. He has not had any fevers or chills. His temperature is 36°C (96.8°F). Physical examination of the left lower leg shows well-demarcated erythema and edema around the skin graft site. The graft site is minimally tender and there is no exudate. Which of the following is the most likely underlying mechanism of this patient’s skin condition?
+
+OPTIONS:
+  A. Opsonization-induced cell destruction
+  B. Immune complex-mediated complement activation
+  C. Staphylococci-induced neutrophil activation
+  D. Antibody-mediated complement activation
+  E. Th1-induced macrophage activation
+
+Correct Answer: E
+Model Answer: E
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=1.000
+Step 1:  The patient in this scenario has developed redness and swelling over the graft site two weeks after undergoing an allogeneic skin graft procedure. Allogeneic skin grafts are from a donor who is genetically different from the recipient, which increases the risk of rejection. The symptoms of redness, swelling, and well-demarcated erythema around the skin graft site are indicative of a graft-versus-host disease (GVHD), which often occurs in the context of allogeneic grafts. ки
+
+[Step 2] PRM: hard=1, soft=0.938
+Step 2:  Graft-versus-host disease occurs when the immune cells from the donor (the graft) recognize the recipient's body as foreign and attack it. This reaction is a result of the immune system being activated against the host's cells. ки
+
+[Step 3] PRM: hard=1, soft=0.812
+Step 3:  The lack of fever, chills, and exudate in the patient suggests that this reaction is not likely due to an infectious process, which would normally cause systemic symptoms such as fever and possibly discharge (exudate). ки
+
+[Step 4] PRM: hard=1, soft=1.000
+Step 4:  Considering the mechanism of GVHD, the most likely underlying mechanism is that the donor T cells (part of the immune system) are recognizing the host's body as foreign and initiating an immune response against it. ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5:  The donor T cells would activate macrophages and other immune cells to attack and destroy the host's cells, leading to the symptoms observed in the patient. ки
+
+[Step 6] PRM: hard=1, soft=1.000
+Step 6:  This process is thus mediated by the T cells from the donor (Th1 cells), which activate macrophages.  The answer is E. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

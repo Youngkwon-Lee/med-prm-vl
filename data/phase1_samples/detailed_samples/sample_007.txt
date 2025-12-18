@@ -1,0 +1,50 @@
+================================================================================
+Sample ID: 7
+Question ID: 2302
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 75-year-old man presents to the physician because of bloody urine, which has occurred several times over the past month. He has no dysuria, flank pain, nausea, or vomiting. He has no history of serious illness and takes no medications. He is a 40-pack-year smoker. The vital signs are within normal limits. Physical exam shows no abnormalities except generalized lung wheezing. The laboratory test results are as follows: Urine Blood 3+ RBC > 100/hpf WBC 1–2/hpf RBC casts Negative Bacteria Not seen Which of the following is the most appropriate diagnostic study at this time?
+
+OPTIONS:
+  A. Chest X-ray
+  B. Computed tomography
+  C. Cystoscopy
+  D. Intravenous
+  E. Ureteroscopy
+
+Correct Answer: C
+Model Answer: C
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.562
+Step 1: The patient presents with hematuria (bloody urine), which occurred several times over the past month, but without any symptoms such as dysuria (painful urination), flank pain, nausea, or vomiting. This suggests a non-obstructive cause of hematuria, ruling out conditions like kidney stones or tumors that may cause obstructive symptoms. ки
+
+[Step 2] PRM: hard=1, soft=0.688
+Step 2: The patient's history of smoking, which amounts to 40 pack-years, is a significant risk factor for lung cancer and also increases the risk of bladder cancer. However, the absence of other symptoms like weight loss, anemia, or a palpable abdominal mass makes it less likely that the hematuria is due to a malignancy. ки
+
+[Step 3] PRM: hard=1, soft=0.625
+Step 3: The physical exam shows generalized lung wheezing but no abnormalities in the abdomen, which suggests that the patient might have a respiratory issue but does not point towards any abdominal or renal issue at this stage. ки
+
+[Step 4] PRM: hard=1, soft=0.875
+Step 4: The laboratory test results show 3+ RBCs in the urine, which indicates a significant amount of blood in the urine, but the absence of RBC casts suggests that the bleeding is likely coming from the lower urinary tract (bladder or urethra), rather than the upper urinary tract (kidneys). ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5: Given the lack of symptoms suggesting upper urinary tract pathology (such as flank pain, which is a common symptom of kidney stones or kidney disease) and the presence of hematuria, the most appropriate initial diagnostic study to investigate the cause of hematuria is a non-invasive study that examines the lower urinary tract. ки
+
+[Step 6] PRM: hard=1, soft=1.000
+Step 6: Given these considerations, the most appropriate diagnostic study is cystoscopy, which is a procedure where a flexible or rigid scope is inserted through the urethra to visualize the inside of the bladder and urethra.  The answer is C. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

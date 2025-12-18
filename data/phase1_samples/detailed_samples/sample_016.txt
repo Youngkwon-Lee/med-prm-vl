@@ -1,0 +1,50 @@
+================================================================================
+Sample ID: 16
+Question ID: 4234
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 30-year-old man comes to the physician because of an episode of bloody vomiting this morning and a 1-week history of burning upper abdominal pain. Two weeks ago, he sustained a head injury and was in a coma for 3 days. An endoscopy shows multiple, shallow hemorrhagic lesions predominantly in the gastric fundus and greater curvature. Biopsies show patchy loss of epithelium and an acute inflammatory infiltrate in the lamina propria that does not extend beyond the muscularis mucosa. Which of the following is the most likely diagnosis?
+
+OPTIONS:
+  A. Type B gastritis
+  B. Dieulafoy lesion
+  C. Cushing ulcer
+  D. Penetrating ulcer
+  E. Erosive gastritis
+
+Correct Answer: E
+Model Answer: E
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.625
+Step 1: The patient's history of head injury and coma for 3 days is significant, as it could have led to stress-induced gastritis, which is a common complication of critical illness. ки
+
+[Step 2] PRM: hard=1, soft=0.750
+Step 2: The symptoms of bloody vomiting and burning upper abdominal pain, along with the endoscopy findings of multiple, shallow hemorrhagic lesions in the gastric fundus and greater curvature, point towards a condition that affects the stomach lining. ки
+
+[Step 3] PRM: hard=1, soft=0.812
+Step 3: The biopsies show patchy loss of epithelium and an acute inflammatory infiltrate in the lamina propria that does not extend beyond the muscularis mucosa, which is consistent with an acute inflammatory response rather than a deep ulceration. ки
+
+[Step 4] PRM: hard=1, soft=0.312
+Step 4: Considering the patient's history of head injury and the findings from the endoscopy and biopsies, the most likely diagnosis is a type of gastritis that is associated with stress and mucosal injury. ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5: Erosive gastritis is a form of gastritis that involves the superficial layers of the stomach lining and is often associated with stress, medications, and other insults that cause mucosal injury. ки
+
+[Step 6] PRM: hard=1, soft=1.000
+Step 6: Based on the information provided, the most likely diagnosis is erosophagitis with the cause being stress-induced due to the head injury, or more specifically,  the answer is (E). ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

@@ -1,0 +1,47 @@
+================================================================================
+Sample ID: 19
+Question ID: 1157
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 72-year-old woman comes to the emergency department because of upper abdominal pain and nausea for the past hour. The patient rates the pain as an 8 to 9 on a 10-point scale. She has had an episode of nonbloody vomiting since the pain started. She has a history of type 2 diabetes mellitus, hypertension, and osteoporosis. The patient has smoked 2 packs of cigarettes daily for 40 years. She drinks 5–6 alcoholic beverages daily. Current medications include glyburide, lisinopril, and oral vitamin D supplements. Her temperature is 38.5°C (101.3°F), pulse is 110/min, and blood pressure is 138/86 mm Hg. Examination shows severe epigastric tenderness to palpation with guarding but no rebound. Ultrasonography of the abdomen shows diffuse enlargement of the pancreas; no gallstones are visualized. The patient is admitted to the hospital for pain control and intravenous hydration. Which of the following is the most appropriate next step in the management of this patient’s pain?
+
+OPTIONS:
+  A. Patient-controlled intravenous hydromorphone
+  B. Transdermal bupivacaine on request
+  C. Oral acetaminophen every 6 hours
+  D. Oral gabapentin every 24 hours
+  E. Transdermal fentanyl every 72 hours
+
+Correct Answer: A
+Model Answer: A
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.812
+Step 1:  The patient presents with severe epigastric tenderness and guarding, which suggests an acute abdominal condition, such as pancreatitis, given the diffuse enlargement of the pancreas on ultrasonography and the patient's symptoms of upper abdominal pain and nausea. ки
+
+[Step 2] PRM: hard=1, soft=0.562
+Step 2:  In managing acute pancreatitis, pain control is a crucial aspect of treatment, as it can be severe and debilitating. The goal of pain management is to provide effective relief while minimizing the risk of respiratory depression, particularly in a patient with a history of smoking and potential respiratory issues. ки
+
+[Step 3] PRM: hard=1, soft=0.875
+Step 3:  Considering the patient's severe pain and the need for effective pain control, patient-controlled analgesia (PCA) is often recommended for acute pain management, especially in the setting of pancreatitis. ки
+
+[Step 4] PRM: hard=1, soft=0.875
+Step 4:  Among the options provided, PCA with intravenous hydromorphone is a common method for managing severe acute pain and can be titrated to the patient's needs, reducing the risk of respiratory depression. ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5:  Therefore, the most appropriate next step in managing this patient's pain would be to implement PCA with intravenous hydromorphone.  The answer is A. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

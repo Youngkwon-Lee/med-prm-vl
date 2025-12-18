@@ -1,0 +1,50 @@
+================================================================================
+Sample ID: 15
+Question ID: 405
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 5-year-old boy presents to his pediatrician for a well-child visit. His mother reports him to be doing well and has no concerns. The boy was born at 39 weeks gestation via spontaneous vaginal delivery. He is up to date on all vaccines and is meeting all developmental milestones. On physical exam, he is noted to have a right upper extremity blood pressure of 150/80 mm Hg. 2+ radial pulses and trace femoral pulses are felt. Cardiac auscultation reveals a regular rate and rhythm with a normal S1 and S2. A 2/6 long systolic murmur with systolic ejection click is heard over left sternal border and back. The point of maximal impact is normal Which of the following is the most likely diagnosis?
+
+OPTIONS:
+  A. Takayasu arteritis
+  B. Interrupted aortic arch
+  C. Pheochromocytoma
+  D. Coarctation of the aorta
+  E. Essential hypertension
+
+Correct Answer: D
+Model Answer: D
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=1.000
+Step 1:  The patient is a 5-year-old boy presenting for a well-child visit, with no reported concerns from his mother and is meeting all developmental milestones. This information suggests that the child is generally healthy and developing normally. ки
+
+[Step 2] PRM: hard=1, soft=1.000
+Step 2:  The boy's blood pressure is notably high for his age, with a reading of 150/80 mm Hg in the right upper extremity. This finding is unusual for a child of this age, and it warrants further investigation. ки
+
+[Step 3] PRM: hard=1, soft=1.000
+Step 3:  Upon physical examination, the child has 2+ radial pulses and trace femoral pulses. This discrepancy in pulses suggests that there may be an obstruction to blood flow in the aorta, which would cause the blood pressure difference between the upper and lower extremities. ки
+
+[Step 4] PRM: hard=1, soft=0.875
+Step 4:  The cardiac auscultation reveals a regular rate and rhythm with a normal S1 and S2, along with a 2/6 long systolic murmur with systolic ejection click. This finding is consistent with aortic stenosis or aortic stenosis-like murmur. ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5:  The point of maximal impact is normal, which suggests that the murmur is not due to aortic regurgitation. ки
+
+[Step 6] PRM: hard=1, soft=1.000
+Step 6:  Considering the combination of high blood pressure, discrepancy in pulses between the upper and lower extremities, and the presence of a systolic ejection click, the most likely diagnosis is coarctation of the aorta.  The answer is D. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+

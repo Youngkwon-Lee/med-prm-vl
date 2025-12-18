@@ -1,0 +1,47 @@
+================================================================================
+Sample ID: 8
+Question ID: 8858
+Data Source: med_qa
+================================================================================
+
+QUESTION:
+A 27-year-old woman, who recently immigrated from Bangladesh, presents to her primary care physician to discuss birth control. During a review of her past medical history, she reports that as a child she had a recurrent sore throat and fever followed by swollen and aching hip and knee joints. These symptoms returned every season and were never treated but went away on their own only to return with the next typhoon season. When asked about any current complaints, the patient says that she sometimes has shortness of breath and palpitations that do not last long. A physical exam is performed. In which of the auscultation sites will a murmur most likely be heard in this patient?
+
+OPTIONS:
+  A. Point 1
+  B. Point 2
+  C. Point 3
+  D. Point 4
+  E. Point 5
+
+Correct Answer: E
+Model Answer: E
+Is Correct: True
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SOLUTION WITH PRM SCORES:
+--------------------------------------------------------------------------------
+
+[Step 1] PRM: hard=1, soft=0.562
+Step 1: The patient's past medical history suggests a history of recurrent joint pain, specifically sore throat and fever followed by swollen and aching hip and knee joints that coincided with the typhoon season. This pattern of symptoms is highly suggestive of recurrent rheumatic fever, which is a complication of streptococcal pharyngitis. ки
+
+[Step 2] PRM: hard=1, soft=0.688
+Step 2: Rheumatic fever can lead to rheumatic heart disease, which often involves the mitral valve. The mitral valve is commonly affected due to the autoimmune inflammatory response triggered by the infection. ки
+
+[Step 3] PRM: hard=1, soft=0.938
+Step 3: In patients with mitral valve disease, the most commonly associated murmur is a systolic murmur due to mitral regurgitation. This occurs when the mitral valve is unable to close properly, allowing blood to flow back into the left atrium during systole. ки
+
+[Step 4] PRM: hard=1, soft=0.750
+Step 4: A systolic murmur due to mitral regurgitation is typically best heard at the apex of the heart, specifically during the systolic phase of the cardiac cycle. ки
+
+[Step 5] PRM: hard=1, soft=1.000
+Step 5: The auscultation sites on a patient's chest are commonly referred to as the 'points' of auscultation. Point 5 is the location of the apex of the heart, where the mitral valve is located.  The answer is E. ки
+
+--------------------------------------------------------------------------------
+CLINICAL REVIEW:
+--------------------------------------------------------------------------------
+1. 각 Step이 임상적으로 정확한가? (1-5): 
+2. Step 분리가 적절한가? (1-5): 
+3. PRM reward가 임상 판단과 일치하는가? (1-5): 
+4. 추가 코멘트:
+
