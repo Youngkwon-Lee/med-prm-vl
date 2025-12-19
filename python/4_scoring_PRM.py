@@ -52,7 +52,14 @@ def parse_args():
         "--data_source_list", type=str, default=None,
         help='JSON-array 형식으로 추론할 data_source 이름들만 지정 '
             '(예: \'["medqa","pubmedqa"]\'). 빈 리스트면 전체 사용'
-    )       
+    )
+
+    # V100 호환성 옵션
+    parser.add_argument("--dtype", type=str, default="bfloat16",
+                        choices=["bfloat16", "float16"],
+                        help="Data type (bfloat16 for A100+, float16 for V100)")
+    parser.add_argument("--no_flash_attn", action="store_true",
+                        help="Disable flash_attention_2 (for compatibility)")
 
     return parser.parse_args()
 
@@ -121,10 +128,20 @@ def main():
 
     # 모델·토크나이저 로드
     print("🔄 모델 로드 중...")
+
+    # dtype 설정 (V100: float16, A100+: bfloat16)
+    torch_dtype = torch.float16 if args.dtype == "float16" else torch.bfloat16
+
+    # attention implementation 설정
+    attn_impl = "eager" if args.no_flash_attn else "flash_attention_2"
+
+    print(f"  - dtype: {args.dtype}")
+    print(f"  - attention: {attn_impl}")
+
     model = AutoModelForCausalLM.from_pretrained(
         args.model_save_path,
-        torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
+        torch_dtype=torch_dtype,
+        attn_implementation=attn_impl,
         device_map="auto"
     )
     tokenizer = AutoTokenizer.from_pretrained(args.model_save_path)

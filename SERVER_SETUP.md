@@ -100,6 +100,41 @@ python python/4_scoring_PRM.py \
 | Storage | 50GB | 100GB |
 | CUDA | 12.1+ | 12.1+ |
 
+## V100 GPU 설정 (HPC Innovation Hub)
+
+V100은 bfloat16을 지원하지 않으므로 float16 사용.
+
+### 서버 정보
+```
+Host: 10.246.246.111
+User: gun3856
+GPU: NVIDIA V100 16GB × 2
+CUDA: 12.4
+```
+
+### V100 전용 실행
+```bash
+# V100 최적화 스크립트 사용
+bash scripts/4_scoring_PRM_v100.sh
+```
+
+### V100 수동 실행
+```bash
+python python/4_scoring_PRM.py \
+    --model_save_path model_train/llama-3.1-medprm-reward-v1.0 \
+    --input_json_file dataset/dataset_3_sampled_dataset/llama-3.1-medprm-reward-test-set/2_test_dataset.json \
+    --output_json_file results/v100_result.json \
+    --device 0 \
+    --hf_token $HF_TOKEN \
+    --dtype float16 \
+    --process_solution_num 32
+```
+
+### V100 주의사항
+- `--dtype float16` 필수 (bfloat16 미지원)
+- `--process_solution_num 32` 권장 (16GB 메모리 제한)
+- flash_attention_2 동작하지만, 문제시 `--no_flash_attn` 추가
+
 ## 예상 결과
 
 | Policy Model | MedQA-4 Accuracy |
