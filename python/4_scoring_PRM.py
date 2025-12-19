@@ -124,7 +124,11 @@ def main():
     if args.hf_token:
         login(args.hf_token)
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = args.device
+    # CUDA_VISIBLE_DEVICES가 이미 설정되어 있으면 args.device 무시
+    if args.device and "CUDA_VISIBLE_DEVICES" not in os.environ:
+        os.environ["CUDA_VISIBLE_DEVICES"] = args.device
+    elif args.device:
+        print(f"⚠️ CUDA_VISIBLE_DEVICES already set to '{os.environ.get('CUDA_VISIBLE_DEVICES')}', ignoring --device {args.device}")
 
     # 모델·토크나이저 로드
     print("🔄 모델 로드 중...")
