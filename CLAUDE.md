@@ -72,9 +72,9 @@ med-prm/
 | Phase | Task | Owner | Status |
 |-------|------|-------|--------|
 | 1 | 데이터 검토 | 임상쌤 + 영권 | ✓ Completed |
-| 2 | PRM/ORM Scoring (HPC) | 영권 | ✓ Completed (partial) |
-| 3 | BoN Implementation | 영권 + 유석쌤 | In Progress |
-| 4 | ProcessBench 분석 | 영권 + 유석쌤 | Pending |
+| 2 | PRM/ORM Scoring (HPC) | 영권 | ✓ Completed (partial: 70-72%) |
+| 3 | ProcessBench RQ 검증 + SC Baseline | 영권 | 🚀 In Progress (parallel) |
+| 4 | BoN 효과 분석 | 영권 + 유석쌤 | Pending |
 | 5 | Visual 확장 | 의섭쌤 + 영권 | Pending |
 
 ## HPC Execution Results (2026-01-21)
@@ -117,6 +117,119 @@ med-prm/
   - `medprm_scores_prm_no_rag_checkpoint.json` (1.1GB, Q3849)
 - **HPC**: `~/med-prm-vl/output/`
   - Checkpoint files can resume with `--resume_from` flag
+
+---
+
+## Phase 3: Parallel Execution (ProcessBench RQ + Self-Consistency Baseline)
+
+### Strategy
+병렬 실행으로 두 분석을 동시에 진행하여 의사결정 시간 단축
+
+```
+Device 0 (GPU 0)                    Device 1 (GPU 1)
+─────────────────────────────────  ──────────────────────────
+ProcessBench RQ 검증               Self-Consistency Baseline
+- RQ1: Misalignment 분석           - BoN 없이 Self-Consistency만 사용
+- RQ2: Min Score 분포              - 정확도 비교 (Baseline)
+- RQ3: Consensus 효과              - BoN 기여도 측정
+예상 소요시간: 2-4시간             예상 소요시간: 6-12시간
+```
+
+### Phase 3 Scripts
+
+#### 1️⃣ ProcessBench Analysis (5_analyze_processebench.py)
+```bash
+# RQ 검증: 체크포인트 파일 기반 분석
+# - Input: medprm_scores_orm/prm_no_rag_checkpoint.json
+# - Output: analysis/processebench_orm/prm_report.json
+# - Metrics: RQ1 (misalignment %), RQ2 (min score distribution), RQ3 (consensus effect)
+```
+
+#### 2️⃣ Self-Consistency Evaluation (6_evaluate_self_consistency.py)
+```bash
+# BoN 없는 Baseline: Self-Consistency만 사용
+# - Input: dataset/dataset_4_scored_dataset/
+# - Output: analysis/sc_only_results.json
+# - Metrics: Accuracy % (comparison with Med-PRM 72.59%)
+```
+
+#### 3️⃣ Parallel Launcher (run_phase3_parallel.sh)
+```bash
+# HPC에서 두 GPU로 병렬 실행
+# Device 0: ProcessBench RQ 분석
+# Device 1: Self-Consistency 평가
+bash scripts/run_phase3_parallel.sh
+```
+
+### Expected Results
+
+#### ProcessBench Analysis
+```
+RQ1: BoN-ProcessBench Misalignment
+  → Expected: 20-30% misalignment (if issue exists)
+
+RQ2: Min Score Distribution
+  → Expected: Late bias (if problem exists)
+     Early (Step 1-2): ~20%
+     Late (Step 5+):   ~60%
+
+RQ3: Consensus Filtering
+  → Expected: HIGH effectiveness (high agreement → high accuracy)
+```
+
+#### Self-Consistency Baseline
+```
+Accuracy without BoN: ~65-70% (expected)
+Med-PRM with BoN:     72.59% (baseline)
+BoN Contribution:     ~2-4% improvement
+```
+
+### Decision Tree (결과에 따른 선택)
+
+```
+IF (RQ1 + RQ2 + RQ3 모두 "YES" - 문제 발생)
+  → 선택: 옵션 1 (SC 재실행) - BoN의 필요성 증명
+
+IF (RQ1/RQ2 중 일부만 "YES")
+  → 선택: 옵션 3 (Raw Model 비교) - 세부 원인 분석
+
+IF (모두 "NO" - 문제 없음)
+  → 의료 도메인이 특별함을 증명 (논문 가치)
+```
+
+### HPC Execution Commands
+
+```bash
+# 1. 로컬에서 커밋 & 푸시
+cd C:\Users\YK\med-prm-vl
+git add scripts/5_analyze_processebench.py scripts/6_evaluate_self_consistency.py scripts/run_phase3_parallel.sh
+git commit -m "feat(phase3): Add ProcessBench RQ analysis and SC baseline evaluation scripts"
+git push origin main
+
+# 2. HPC에서 git pull
+ssh gun3856@10.246.246.111
+cd ~/med-prm-vl
+git pull origin main
+
+# 3. 병렬 실행 시작
+chmod +x scripts/run_phase3_parallel.sh
+bash scripts/run_phase3_parallel.sh
+
+# 4. 진행 상황 모니터링
+tail -f logs/device0_processebench.log
+tail -f logs/device1_self_consistency.log
+
+# 5. 결과 확인 (완료 후)
+cat analysis/processebench_integrated_report.json
+cat analysis/sc_only_results.json
+```
+
+### Timeline
+- 로컬 스크립트 작성: 1-2시간 ✓
+- Git 커밋 & HPC 동기화: 15분
+- HPC 병렬 실행: 6-12시간
+- 결과 분석 & 의사결정: 2-3시간
+- **총 소요 예상시간: 8-16시간**
 
 ## Key Commands
 
