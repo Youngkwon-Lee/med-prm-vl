@@ -40,25 +40,36 @@ def analyze_rq1_misalignment(processed_data):
     total_processed = 0
 
     for i, item in enumerate(processed_data):
-        if 'step_wise_scores' not in item or not item['step_wise_scores']:
+        # 체크포인트 파일의 실제 키 이름: PRM_score_list (step_wise_scores 아님)
+        score_list_key = None
+        if 'PRM_score_list' in item and item['PRM_score_list']:
+            score_list_key = 'PRM_score_list'
+        elif 'step_wise_scores' in item and item['step_wise_scores']:
+            score_list_key = 'step_wise_scores'
+
+        if not score_list_key:
             continue
 
         total_processed += 1
 
         # 현재 경로의 최소 step 점수
-        current_min_score = min(item['step_wise_scores'])
+        scores = item[score_list_key]
+        current_min_score = min(scores)
 
         # 만약 다른 고득점 경로가 더 높은 min_score를 가졌다면?
         # (이건 데이터 제약으로 정확 계산은 어렵지만, min_score 위치 분석으로 대체)
 
-        min_score_position = item['step_wise_scores'].index(current_min_score)
+        min_score_position = scores.index(current_min_score)
+
+        # is_correct 또는 correct 키 확인
+        correct_value = item.get('is_correct', item.get('correct', None))
 
         misalignment_cases.append({
             'question_id': item['question_id'],
             'min_score': current_min_score,
             'min_position': min_score_position,
-            'num_steps': len(item['step_wise_scores']),
-            'correct': item.get('correct', None)
+            'num_steps': len(scores),
+            'correct': correct_value
         })
 
     # 분석: Min score가 early stage에서 발생하는 경우 = ProcessBench가 better
@@ -112,10 +123,15 @@ def analyze_rq2_min_score_distribution(processed_data):
     score_distribution = defaultdict(list)
 
     for item in processed_data:
-        if 'step_wise_scores' not in item or not item['step_wise_scores']:
-            continue
+        # PRM_score_list 또는 step_wise_scores 키 확인
+        scores = None
+        if 'PRM_score_list' in item and item['PRM_score_list']:
+            scores = item['PRM_score_list']
+        elif 'step_wise_scores' in item and item['step_wise_scores']:
+            scores = item['step_wise_scores']
 
-        scores = item['step_wise_scores']
+        if not scores:
+            continue
         min_score = min(scores)
         min_position = scores.index(min_score)
 
@@ -172,22 +188,37 @@ def analyze_rq3_consensus_filtering(processed_data):
     print("RQ3: Consensus Filtering Effectiveness")
     print("="*70)
 
-    # Hard consensus: 정답이 명확한 경우 (이 데이터셋에선 제한적)
-    correct_items = [item for item in processed_data if item.get('correct', False)]
-    incorrect_items = [item for item in processed_data if not item.get('correct', False)]
+    # Hard consensus: 정답이 명확한 경우
+    # is_correct 또는 correct 키 확인
+    correct_items = [item for item in processed_data if item.get('is_correct', item.get('correct', False))]
+    incorrect_items = [item for item in processed_data if not item.get('is_correct', item.get('correct', False))]
 
     # Soft consensus: 점수 편차로 측정
     score_variance_correct = []
     score_variance_incorrect = []
 
     for item in correct_items:
-        if 'step_wise_scores' in item and item['step_wise_scores']:
-            variance = np.var(item['step_wise_scores'])
+        # PRM_score_list 또는 step_wise_scores 키 확인
+        scores = None
+        if 'PRM_score_list' in item and item['PRM_score_list']:
+            scores = item['PRM_score_list']
+        elif 'step_wise_scores' in item and item['step_wise_scores']:
+            scores = item['step_wise_scores']
+
+        if scores:
+            variance = np.var(scores)
             score_variance_correct.append(variance)
 
     for item in incorrect_items:
-        if 'step_wise_scores' in item and item['step_wise_scores']:
-            variance = np.var(item['step_wise_scores'])
+        # PRM_score_list 또는 step_wise_scores 키 확인
+        scores = None
+        if 'PRM_score_list' in item and item['PRM_score_list']:
+            scores = item['PRM_score_list']
+        elif 'step_wise_scores' in item and item['step_wise_scores']:
+            scores = item['step_wise_scores']
+
+        if scores:
+            variance = np.var(scores)
             score_variance_incorrect.append(variance)
 
     print(f"\n샘플 분류:")
