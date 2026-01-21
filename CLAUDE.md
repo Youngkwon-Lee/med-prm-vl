@@ -71,10 +71,52 @@ med-prm/
 
 | Phase | Task | Owner | Status |
 |-------|------|-------|--------|
-| 1 | 데이터 검토 | 임상쌤 + 영권 | In Progress |
-| 2 | BoN Implementation | 영권 + 유석쌤 | Pending |
-| 3 | ProcessBench 분석 | 영권 + 유석쌤 | Pending |
-| 4 | Visual 확장 | 의섭쌤 + 영권 | Pending |
+| 1 | 데이터 검토 | 임상쌤 + 영권 | ✓ Completed |
+| 2 | PRM/ORM Scoring (HPC) | 영권 | ✓ Completed (partial) |
+| 3 | BoN Implementation | 영권 + 유석쌤 | In Progress |
+| 4 | ProcessBench 분석 | 영권 + 유석쌤 | Pending |
+| 5 | Visual 확장 | 의섭쌤 + 영권 | Pending |
+
+## HPC Execution Results (2026-01-21)
+
+### Phase 2 Summary
+**Devices**: 2x V100 GPU (16GB each) | **Duration**: ~48 hours | **Status**: Completed (partial)
+
+#### ORM (Outcome Reward Model) - No RAG
+```
+✓ Processed:      Q0 ~ Q3949 (3,950 samples)
+✓ Completion:     3,950 / 5,469 → 72.2%
+✓ PRM Accuracy:   2,751 / 3,950 → 69.6%
+✓ MV Accuracy:    2,780 / 3,950 → 70.4%
+✗ Stopped At:     Q3950 (GPU OOM after 48h)
+```
+
+#### PRM (Process Reward Model) - No RAG
+```
+✓ Processed:      Q0 ~ Q3849 (3,850 samples)
+✓ Completion:     3,850 / 5,469 → 70.4%
+✓ PRM Accuracy:   2,719 / 3,850 → 70.6%
+✓ MV Accuracy:    2,765 / 3,850 → 71.8%
+✗ Stopped At:     Q3850 (GPU OOM)
+```
+
+#### Key Findings
+- **MV > PRM**: Majority voting outperformed single reward (±1-2%)
+- **Memory Bottleneck**: V100 16GB insufficient beyond 70-73% with 4096 token limit
+- **Checkpoint Integrity**: ✓ All transferred files valid, no corruption
+- **Remaining**: ORM 27.8% (1,519 Q), PRM 29.6% (1,619 Q)
+
+**Next Steps**:
+1. Request HPC GPU upgrade (A100 40GB) for full dataset
+2. OR optimize tokenization (max_token_len ≤ 2048) for ~100% completion
+3. OR publish partial results with current 70-72% coverage
+
+### Result Files
+- **Local**: `C:\Users\YK\med-prm-vl\output/`
+  - `medprm_scores_orm_no_rag_checkpoint.json` (1.4GB, Q3949)
+  - `medprm_scores_prm_no_rag_checkpoint.json` (1.1GB, Q3849)
+- **HPC**: `~/med-prm-vl/output/`
+  - Checkpoint files can resume with `--resume_from` flag
 
 ## Key Commands
 
@@ -87,6 +129,11 @@ ls data/phase1_samples/
 
 # Excel 파일 위치
 data/phase1_samples/clinical_review_*.xlsx
+
+# Phase 2: 결과 분석 (로컬)
+cd output/
+python ../scripts/analyze_results.py medprm_scores_orm_no_rag_checkpoint.json
+python ../scripts/analyze_results.py medprm_scores_prm_no_rag_checkpoint.json
 ```
 
 ## HPC 파일 송수신 (SCP)
