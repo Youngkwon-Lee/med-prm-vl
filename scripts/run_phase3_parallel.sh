@@ -7,7 +7,7 @@
 
 set -e
 
-PROJECT_DIR="/home/gun3856/med-prm-vl"
+PROJECT_DIR="/home2/gun3856/med-prm-vl"
 cd "$PROJECT_DIR"
 
 echo "=========================================================================="
