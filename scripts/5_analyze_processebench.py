@@ -66,6 +66,19 @@ def analyze_rq1_misalignment(processed_data):
     late_min = sum(1 for c in misalignment_cases if c['min_position'] >= 5)
 
     print(f"\n총 처리된 샘플: {total_processed}")
+
+    # ZeroDivisionError 방지
+    if total_processed == 0:
+        print("❌ 오류: 처리된 샘플이 0개입니다!")
+        return {
+            'total_processed': 0,
+            'early_min_count': 0,
+            'late_min_count': 0,
+            'estimated_misalignment_pct': 0,
+            'cases': [],
+            'error': 'No processed data found'
+        }
+
     print(f"조기 단계(Step 1-2)에 Min Score: {early_min} ({early_min/total_processed*100:.1f}%)")
     print(f"후기 단계(Step 5+)에 Min Score: {late_min} ({late_min/total_processed*100:.1f}%)")
 
@@ -225,6 +238,22 @@ def main():
 
     processed_data = checkpoint_data.get('processed_data', [])
     print(f"✓ {len(processed_data)}개 샘플 로드 완료")
+
+    # 데이터 검증
+    if not processed_data:
+        print("⚠️  경고: processed_data가 비어있습니다!")
+        print(f"체크포인트 파일 구조: {list(checkpoint_data.keys())}")
+        # 대체 키 확인
+        if 'data' in checkpoint_data:
+            processed_data = checkpoint_data['data']
+            print(f"→ 'data' 키 사용: {len(processed_data)}개 샘플")
+        elif 'results' in checkpoint_data:
+            processed_data = checkpoint_data['results']
+            print(f"→ 'results' 키 사용: {len(processed_data)}개 샘플")
+
+    if not processed_data:
+        print("❌ 오류: 분석할 데이터가 없습니다!")
+        exit(1)
 
     # 각 RQ 분석
     rq1_result = analyze_rq1_misalignment(processed_data)

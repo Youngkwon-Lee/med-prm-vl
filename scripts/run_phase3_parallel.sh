@@ -106,24 +106,23 @@ echo "────────────────────────�
 {
     echo "[$(date)] Starting Self-Consistency Evaluation on Device 1..."
 
-    # 테스트 데이터셋 확인 (실제 존재하는 파일로 조정 필요)
-    DATASET_PATH="dataset/dataset_1_train_dataset/test.json"
+    # 테스트 데이터셋 (우선순위 순서로 시도)
+    DATASET_PATH="dataset/dataset_3_sampled_dataset/llama-3.1-medprm-reward-test-set/2_test_dataset.json"
 
-    if [ ! -f "$DATASET_PATH" ]; then
-        echo "⚠️  Warning: Dataset not found at $DATASET_PATH"
-        echo "[$(date)] Skipping SC evaluation - dataset path mismatch"
-    else
-        # Self-Consistency 평가 (최초 1000개로 시작, 시간이 많이 걸리므로)
-        python scripts/6_evaluate_self_consistency.py \
-            --dataset "$DATASET_PATH" \
-            --output analysis/sc_only_results.json \
-            --model-name meta-llama/Llama-3.1-8b-instruct \
-            --num-solutions 64 \
-            --max-samples 500 \
-            --device cuda:1
+    # 경로가 없으면 스크립트가 자동으로 대체 경로를 찾으므로
+    # 여기서는 기본 경로만 전달
+    echo "[$(date)] Using dataset: $DATASET_PATH"
 
-        echo "[$(date)] Self-Consistency Evaluation Completed!"
-    fi
+    # Self-Consistency 평가 (최초 500개로 시작)
+    python scripts/6_evaluate_self_consistency.py \
+        --dataset "$DATASET_PATH" \
+        --output analysis/sc_only_results.json \
+        --model-name meta-llama/Llama-3.1-8b-instruct \
+        --num-solutions 64 \
+        --max-samples 500 \
+        --device cuda:1
+
+    echo "[$(date)] Self-Consistency Evaluation Completed!"
 
 } > logs/device1_self_consistency.log 2>&1 &
 

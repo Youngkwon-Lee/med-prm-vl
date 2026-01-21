@@ -24,11 +24,35 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 
 
 def load_dataset(dataset_path, max_samples=None):
-    """데이터셋 로드"""
-    print(f"\n📂 데이터셋 로드: {dataset_path}")
+    """데이터셋 로드 (경로 자동 찾기)"""
+    from pathlib import Path
 
-    with open(dataset_path, 'r') as f:
-        dataset = json.load(f)
+    # 원본 경로 시도
+    if Path(dataset_path).exists():
+        print(f"\n📂 데이터셋 로드: {dataset_path}")
+        with open(dataset_path, 'r') as f:
+            dataset = json.load(f)
+    else:
+        print(f"⚠️  경로 없음: {dataset_path}")
+
+        # 대체 경로 1: dataset_3_sampled_dataset/test
+        alt_path1 = "dataset/dataset_3_sampled_dataset/llama-3.1-medprm-reward-test-set/2_test_dataset.json"
+        # 대체 경로 2: dataset_1_train_dataset/train
+        alt_path2 = "dataset/dataset_1_train_dataset/llama-3.1-medprm-reward-training-set/1_train_dataset.json"
+
+        for alt_path in [alt_path1, alt_path2]:
+            if Path(alt_path).exists():
+                print(f"→ 대체 경로 사용: {alt_path}")
+                with open(alt_path, 'r') as f:
+                    dataset = json.load(f)
+                break
+        else:
+            print("❌ 오류: 데이터셋을 찾을 수 없습니다!")
+            print(f"   시도한 경로:")
+            print(f"   1. {dataset_path}")
+            print(f"   2. {alt_path1}")
+            print(f"   3. {alt_path2}")
+            exit(1)
 
     if max_samples:
         dataset = dataset[:max_samples]
