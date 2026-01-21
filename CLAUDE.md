@@ -89,6 +89,24 @@ ls data/phase1_samples/
 data/phase1_samples/clinical_review_*.xlsx
 ```
 
+## HPC 파일 송수신 (SCP)
+
+**HPC 서버**: `10.246.246.111` | **User**: `gun3856`
+
+```bash
+# 로컬 → HPC 업로드
+scp "D:\path\file.tar.gz" gun3856@10.246.246.111:~/
+
+# HPC → 로컬 다운로드 (결과 파일)
+scp gun3856@10.246.246.111:~/med-prm-vl/output/medprm_scores_orm_no_rag.json "C:\Users\YK\med-prm-vl\output\"
+scp gun3856@10.246.246.111:~/med-prm-vl/output/medprm_scores_prm_no_rag.json "C:\Users\YK\med-prm-vl\output\"
+
+# 폴더 다운로드
+scp -r gun3856@10.246.246.111:~/med-prm-vl/logs "C:\Users\YK\med-prm-vl\"
+```
+
+**Password**: `614c5b68` (기억하기)
+
 ## 내부 서버 실행 (Phase 2)
 
 ```bash
