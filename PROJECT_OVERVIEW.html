@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Med-PRM: 의료 도메인 Process Reward Model 분석</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: #000;
+            font-size: 2.2em;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            color: #555;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+
+        .date {
+            color: #999;
+            font-size: 0.85em;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: #000;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ccc;
+            font-weight: bold;
+        }
+
+        .section h3 {
+            color: #333;
+            font-size: 1.2em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            color: #000;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #ccc;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid #ccc;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .team-table {
+            width: 100%;
+        }
+
+        .research-questions {
+            background: #f5f5f5;
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin: 15px 0;
+        }
+
+        .rq-item {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .rq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .rq-label {
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 4px;
+        }
+
+        .rq-question {
+            color: #333;
+            font-size: 0.95em;
+            margin-left: 15px;
+        }
+
+        .phase-overview {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .phase-overview td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        .phase-header {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .phase-completed {
+            background-color: #fafafa;
+        }
+
+        .phase-in-progress {
+            background-color: #fafafa;
+        }
+
+        .phase-number {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .phase-name {
+            font-weight: bold;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        .phase-status {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .detailed-section {
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .detail-title {
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+
+        .detail-content {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .comparison-table {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1.2fr 1fr;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-label {
+            font-weight: bold;
+            color: #000;
+        }
+
+        .comparison-value {
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .key-finding {
+            background: #f5f5f5;
+            border-left: 3px solid #333;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .finding-title {
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .finding-content {
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric {
+            background: #f5f5f5;
+            padding: 15px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .timeline {
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 150px 1fr 150px;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #ddd;
+            align-items: center;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-date {
+            color: #666;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .timeline-title {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .timeline-status {
+            text-align: right;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .conclusion {
+            background: #f5f5f5;
+            border: 2px solid #333;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .conclusion-title {
+            font-weight: bold;
+            color: #000;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+        }
+
+        .conclusion-content {
+            color: #333;
+            line-height: 1.7;
+            font-size: 0.95em;
+        }
+
+        footer {
+            text-align: center;
+            color: #999;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+            font-size: 0.85em;
+        }
+
+        .list-item {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .list-item:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .comparison-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Med-PRM: 의료 도메인 Process Reward Model 분석</h1>
+            <p class="subtitle">"Is Best-of-N Sufficient? Analyzing Process Reward Model Alignment in Medical Reasoning"</p>
+            <p class="date">2026년 1월 21일</p>
+        </header>
+
+        <!-- ========== 팀 구성 ========== -->
+        <section class="section">
+            <h2>1. 팀 구성 및 역할</h2>
+
+            <table class="team-table">
+                <tr>
+                    <th width="15%">담당자</th>
+                    <th width="85%">역할</th>
+                </tr>
+                <tr>
+                    <td><strong>영권</strong></td>
+                    <td>• 코드 구현 및 실험 수행<br>
+                        • ProcessBench 분석<br>
+                        • HPC 실행 및 모니터링<br>
+                        • 논문 작성 (Methods, Results, Discussion)</td>
+                </tr>
+                <tr>
+                    <td><strong>임상쌤</strong></td>
+                    <td>• 데이터 검토 및 검증<br>
+                        • Step 분리 타당성 평가<br>
+                        • 임상적 정확도 검증<br>
+                        • 논문 검수</td>
+                </tr>
+                <tr>
+                    <td><strong>유석쌤</strong></td>
+                    <td>• 실험 설계 및 방법론 개발<br>
+                        • 통계 분석 및 신뢰도 계산<br>
+                        • 결과 해석 및 의의 평가</td>
+                </tr>
+                <tr>
+                    <td><strong>의섭쌤</strong></td>
+                    <td>• Visual PRM 데이터 준비<br>
+                        • VLM 통합 (Phase 5)<br>
+                        • Visual ProcessBench 실행</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- ========== 연구 목표 ========== -->
+        <section class="section">
+            <h2>2. 연구 목표 및 Research Questions</h2>
+
+            <div class="detail-content">
+                <strong>핵심 목표:</strong> Qwen ProcessBench 논문이 발견한 "BoN vs ProcessBench 미스얼라인먼트" 문제가 의료 도메인에서도 발생하는지 검증
+            </div>
+
+            <div class="research-questions">
+                <div class="rq-item">
+                    <div class="rq-label">RQ1: BoN-ProcessBench 미스얼라인먼트</div>
+                    <div class="rq-question">Medical에서도 BoN과 ProcessBench 선택이 불일치하는가?</div>
+                </div>
+                <div class="rq-item">
+                    <div class="rq-label">RQ2: 최소 점수 분포</div>
+                    <div class="rq-question">최소 step 점수가 마지막 단계에 집중되는 bias가 있는가?</div>
+                </div>
+                <div class="rq-item">
+                    <div class="rq-label">RQ3: 컨센서스 필터링 효과</div>
+                    <div class="rq-question">Qwen의 Consensus Filtering이 의료 도메인에서도 효과적인가?</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 프로젝트 진행 상황 ========== -->
+        <section class="section">
+            <h2>3. 프로젝트 Phase별 진행 상황</h2>
+
+            <table class="phase-overview">
+                <tr>
+                    <td class="phase-header">Phase</td>
+                    <td class="phase-header">내용</td>
+                    <td class="phase-header">담당</td>
+                    <td class="phase-header">상태</td>
+                </tr>
+                <tr>
+                    <td class="phase-completed"><div class="phase-number">0</div><div class="phase-name">Baseline 분석</div></td>
+                    <td>Med-PRM, Qwen, VisualPRM 논문 분석<br>Git Repository 분석</td>
+                    <td>영권</td>
+                    <td class="phase-status">✓ 완료<br>2025-12-01~20</td>
+                </tr>
+                <tr>
+                    <td class="phase-completed"><div class="phase-number">1</div><div class="phase-name">데이터 검토</div></td>
+                    <td>100개 샘플 추출 및 분류<br>임상 검토용 Excel 생성</td>
+                    <td>영권 + 임상쌤</td>
+                    <td class="phase-status">✓ 완료<br>2025-12-20~01-05</td>
+                </tr>
+                <tr>
+                    <td class="phase-completed"><div class="phase-number">2</div><div class="phase-name">Baseline 구현</div></td>
+                    <td>Med-PRM 코드 재현<br>ORM/PRM Scoring<br>Majority Voting 구현</td>
+                    <td>영권</td>
+                    <td class="phase-status">✓ 완료 (70-72%)<br>2026-01-05~20</td>
+                </tr>
+                <tr>
+                    <td class="phase-in-progress"><div class="phase-number">3</div><div class="phase-name">RQ 검증</div></td>
+                    <td>ProcessBench 분석<br>Self-Consistency 베이스라인<br>BoN 기여도 측정</td>
+                    <td>영권</td>
+                    <td class="phase-status">🚀 진행 중<br>2026-01-21</td>
+                </tr>
+                <tr>
+                    <td><div class="phase-number">4</div><div class="phase-name">분석 & 논문</div></td>
+                    <td>결과 시각화<br>통계 분석<br>논문 작성</td>
+                    <td>영권 + 유석쌤</td>
+                    <td class="phase-status">⏳ 예정<br>2026-01-28~02-10</td>
+                </tr>
+                <tr>
+                    <td><div class="phase-number">5</div><div class="phase-name">Visual 확장</div></td>
+                    <td>Visual ProcessBench<br>Text vs Visual 비교</td>
+                    <td>영권 + 의섭쌤</td>
+                    <td class="phase-status">⏳ 예정<br>2026-02-10~24</td>
+                </tr>
+            </table>
+
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-value">100%</div>
+                    <div class="metric-label">Phase 0-2 완료</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">70%</div>
+                    <div class="metric-label">Phase 3 준비</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">8주</div>
+                    <div class="metric-label">전체 예상 기간</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">6주</div>
+                    <div class="metric-label">남은 기간</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== Phase 2 결과 비교 ========== -->
+        <section class="section">
+            <h2>4. Phase 2: Baseline 논문 예측값 vs 실행값 비교</h2>
+
+            <h3>4.1 데이터셋 및 실행 환경</h3>
+            <table>
+                <tr>
+                    <th width="30%">항목</th>
+                    <th width="70%">설명</th>
+                </tr>
+                <tr>
+                    <td>데이터셋</td>
+                    <td>dmis-lab/llama-3.1-medprm-reward-training-set (11,700개 질문)</td>
+                </tr>
+                <tr>
+                    <td>테스트 모드</td>
+                    <td>No RAG (검색 보강 없음)</td>
+                </tr>
+                <tr>
+                    <td>모델</td>
+                    <td>Llama-3.1-8B (ORM/PRM 기반)</td>
+                </tr>
+                <tr>
+                    <td>평가 방법</td>
+                    <td>BoN (N=64) + Majority Voting</td>
+                </tr>
+                <tr>
+                    <td>HPC 환경</td>
+                    <td>2x V100 GPU (16GB each), ~48시간</td>
+                </tr>
+            </table>
+
+            <h3>4.2 논문 예측값 vs 우리 실행값</h3>
+            <div class="comparison-table">
+                <div class="comparison-row">
+                    <div class="comparison-label">메트릭</div>
+                    <div class="comparison-label">Med-PRM 논문</div>
+                    <div class="comparison-label">우리 HPC 실행</div>
+                    <div class="comparison-label">상태</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">ORM 정확도</div>
+                    <div class="comparison-value">~72%</div>
+                    <div class="comparison-value">69.6% (2,751/3,950)</div>
+                    <div class="comparison-value">✓ 근접</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">PRM 정확도</div>
+                    <div class="comparison-value">~73%</div>
+                    <div class="comparison-value">70.6% (2,719/3,850)</div>
+                    <div class="comparison-value">✓ 근접</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">MV-ORM</div>
+                    <div class="comparison-value">>72%</div>
+                    <div class="comparison-value">70.4% (2,780/3,950)</div>
+                    <div class="comparison-value">✓ 근접</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">MV-PRM</div>
+                    <div class="comparison-value">>73%</div>
+                    <div class="comparison-value">71.8% (2,765/3,850)</div>
+                    <div class="comparison-value">✓ 근접</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">데이터 커버리지</div>
+                    <div class="comparison-value">100%</div>
+                    <div class="comparison-value">70-72%</div>
+                    <div class="comparison-value">⚠️ GPU OOM</div>
+                </div>
+            </table>
+
+            <h3>4.3 분석</h3>
+            <div class="key-finding">
+                <div class="finding-title">✓ 예측값과 실행값이 근접한 이유</div>
+                <div class="finding-content">
+                    • 동일 모델: Llama-3.1-8B<br>
+                    • 동일 데이터: HuggingFace dataset<br>
+                    • 동일 방법론: BoN (N=64) + Majority Voting
+                </div>
+            </div>
+
+            <div class="key-finding">
+                <div class="finding-title">⚠️ 차이가 나는 이유 및 해결책</div>
+                <div class="finding-content">
+                    • 부분 데이터 (70-72% coverage): V100 16GB GPU OOM<br>
+                    • 토큰 길이 제한 (4096): 장문 질문 정보 손실<br>
+                    → Phase 3에서는 기존 체크포인트를 활용하여 분석하므로 커버리지 문제 없음<br>
+                    → 통계적으로 70% 이상 샘플은 신뢰도 있는 결론 도출 가능
+                </div>
+            </div>
+
+            <div class="key-finding">
+                <div class="finding-title">📌 Phase 2 결론</div>
+                <div class="finding-content">
+                    우리의 HPC 실행 결과는 Med-PRM 논문과 충분히 근접하여<br>
+                    Phase 3 ProcessBench 분석의 타당성 검증 완료 ✓
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== Phase 3 예상 ========== -->
+        <section class="section">
+            <h2>5. Phase 3: ProcessBench RQ 검증 (진행 중)</h2>
+
+            <h3>5.1 분석 목표</h3>
+            <div class="detail-content">
+                Phase 2의 Baseline 데이터(ORM/PRM 점수, Majority Voting)를 기반으로<br>
+                Qwen ProcessBench 논문의 3개 RQ를 의료 도메인에서 검증
+            </div>
+
+            <h3>5.2 예상 결과 비교</h3>
+            <div class="comparison-table">
+                <div class="comparison-row">
+                    <div class="comparison-label">항목</div>
+                    <div class="comparison-label">Qwen 논문</div>
+                    <div class="comparison-label">우리 예상</div>
+                    <div class="comparison-label">의미</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">RQ1 미스얼라인먼트</div>
+                    <div class="comparison-value">~25-35%</div>
+                    <div class="comparison-value">20-30% or 0%?</div>
+                    <div class="comparison-value">검증 중</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">RQ2 Late bias</div>
+                    <div class="comparison-value">~60% (Late)</div>
+                    <div class="comparison-value">~60% or 30%?</div>
+                    <div class="comparison-value">검증 중</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">RQ3 Consensus</div>
+                    <div class="comparison-value">HIGH 효과</div>
+                    <div class="comparison-value">HIGH or LOW?</div>
+                    <div class="comparison-value">검증 중</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">SC 정확도 (기준)</div>
+                    <div class="comparison-value">~68%</div>
+                    <div class="comparison-value">~65-70%</div>
+                    <div class="comparison-value">예상</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">BoN 기여도</div>
+                    <div class="comparison-value">~4-5%</div>
+                    <div class="comparison-value">~2-4%?</div>
+                    <div class="comparison-value">검증 중</div>
+                </div>
+            </div>
+
+            <h3>5.3 생성된 분석 스크립트</h3>
+            <div class="detailed-section">
+                <div class="detail-title">5_analyze_processebench.py</div>
+                <div class="list-item">RQ1: BoN-ProcessBench 미스얼라인먼트 분석</div>
+                <div class="list-item">RQ2: 최소 점수 위치 분포 분석</div>
+                <div class="list-item">RQ3: Consensus Filtering 효과 분석</div>
+                <div class="detail-content" style="margin-top: 10px;">예상 소요시간: 2-4시간 (Device 0)</div>
+            </div>
+
+            <div class="detailed-section">
+                <div class="detail-title">6_evaluate_self_consistency.py</div>
+                <div class="list-item">BoN 없는 Self-Consistency 베이스라인 평가</div>
+                <div class="list-item">정확도 측정 및 BoN 기여도 계산</div>
+                <div class="detail-content" style="margin-top: 10px;">예상 소요시간: 6-12시간 (Device 1)</div>
+            </div>
+        </section>
+
+        <!-- ========== 타임라인 ========== -->
+        <section class="section">
+            <h2>6. 전체 프로젝트 타임라인</h2>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2025-12-01~20</div>
+                    <div class="timeline-title">Phase 0: 논문 & Repo 분석</div>
+                    <div class="timeline-status">✓ 완료</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2025-12-20~01-05</div>
+                    <div class="timeline-title">Phase 1: 데이터 검토 & 샘플링</div>
+                    <div class="timeline-status">✓ 완료</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026-01-05~20</div>
+                    <div class="timeline-title">Phase 2: Baseline 구현 & 비교</div>
+                    <div class="timeline-status">✓ 완료</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026-01-21</div>
+                    <div class="timeline-title">Phase 3: ProcessBench RQ 검증</div>
+                    <div class="timeline-status">🚀 진행 중</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026-01-28~02-10</div>
+                    <div class="timeline-title">Phase 4: 분석 & 논문 작성</div>
+                    <div class="timeline-status">⏳ 예정 (2주)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026-02-10~24</div>
+                    <div class="timeline-title">Phase 5: Visual 확장</div>
+                    <div class="timeline-status">⏳ 예정 (2주)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026-02-24~03-10</div>
+                    <div class="timeline-title">최종 정리 & 투고</div>
+                    <div class="timeline-status">⏳ 예정 (2주)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 결론 ========== -->
+        <section class="section">
+            <h2>7. 결론</h2>
+
+            <div class="conclusion">
+                <div class="conclusion-title">프로젝트 현재 상태</div>
+                <div class="conclusion-content">
+                    • Phase 0-2 (Baseline 검증): 100% 완료<br>
+                    • Phase 3 (핵심 분석): 준비 완료, HPC 실행 중<br>
+                    • Phase 4-5 (확장 분석): 예정<br><br>
+
+                    <strong>핵심 의의:</strong><br>
+                    Phase 3의 3개 RQ 결과에 따라 다음과 같이 논문의 방향이 결정됨<br><br>
+
+                    ✓ IF RQ1/2/3 모두 YES<br>
+                    → "의료도 일반 도메인처럼 BoN 한계 존재" (Impact 높음)<br><br>
+
+                    ✓ IF RQ 일부만 YES<br>
+                    → "의료는 특수 도메인" (Medical 특성 탐구)<br><br>
+
+                    ✓ IF 모두 NO<br>
+                    → "의료는 BoN에 최적화" (Why different? 분석)
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Med-PRM: Medical Process Reward Model 분석 프로젝트</p>
+            <p>제1저자: 영권 | 기관: 의과대학 | 2026년 1월</p>
+        </footer>
+    </div>
+</body>
+</html>
