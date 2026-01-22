@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Med-PRM Phase 3 진행 상황</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: #1e40af;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #2563eb;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: #1e40af;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e7ff;
+        }
+
+        .section h3 {
+            color: #2563eb;
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .checklist li.pending:before {
+            content: "○";
+            color: #f59e0b;
+        }
+
+        .checklist li.pending {
+            color: #999;
+        }
+
+        .checklist li.error:before {
+            content: "✕";
+            color: #ef4444;
+        }
+
+        .checklist li.error {
+            color: #dc2626;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 15px 0;
+        }
+
+        .timeline {
+            display: grid;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            padding: 20px;
+            background: #f9fafb;
+            border-left: 4px solid #2563eb;
+            border-radius: 5px;
+        }
+
+        .timeline-item.completed {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .timeline-item.pending {
+            border-left-color: #f59e0b;
+            background: #fffbf0;
+        }
+
+        .timeline-date {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .timeline-title {
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+
+        .timeline-desc {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f3f4f6;
+            font-weight: bold;
+            color: #1e40af;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .status-complete {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .issue-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .issue-title {
+            color: #dc2626;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .solution-box {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .solution-title {
+            color: #059669;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        footer {
+            text-align: center;
+            color: #999;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .github-link {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .github-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔬 Med-PRM Phase 3: ProcessBench Analysis</h1>
+            <p class="subtitle">Medical Process Reward Model 평가 - ProcessBench RQ 검증 및 Self-Consistency 베이스라인</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">생성된 스크립트</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">7</div>
+                <div class="stat-label">버그 수정 커밋</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1</div>
+                <div class="stat-label">주요 이슈 분석</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">70%</div>
+                <div class="stat-label">진행률</div>
+            </div>
+        </div>
+
+        <!-- ========== 완료된 작업 ========== -->
+        <section class="section">
+            <h2>✅ 완료된 작업</h2>
+
+            <div class="timeline">
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-01-21 (수)</div>
+                    <div class="timeline-title">Phase 3 스크립트 작성</div>
+                    <div class="timeline-desc">
+                        <ul class="checklist">
+                            <li><code>5_analyze_processebench.py</code> - 3개 RQ 분석 엔진 (RQ1: 미스얼라인먼트, RQ2: 최소값 분포, RQ3: 컨센서스 필터링)</li>
+                            <li><code>6_evaluate_self_consistency.py</code> - Self-Consistency 베이스라인 (BoN 제거)</li>
+                            <li><code>run_phase3_parallel.sh</code> - Device 0/1 병렬 오케스트레이터</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-01-21 (수) 21:51</div>
+                    <div class="timeline-title">HPC 경로 수정</div>
+                    <div class="timeline-desc">
+                        <ul class="checklist">
+                            <li>HPC 디렉토리: <code>/home</code> → <code>/home2</code> 수정</li>
+                            <li>스크립트 실행 권한 확인 및 설정</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-01-21 (수) 22:15</div>
+                    <div class="timeline-title">체크포인트 파일 구조 분석</div>
+                    <div class="timeline-desc">
+                        <ul class="checklist">
+                            <li>최상위 키 확인: <code>last_processed_idx, processed_data, prm_correct, mv_correct</code></li>
+                            <li>실제 키 발견: <code>PRM_score_list, is_correct</code></li>
+                            <li>정규 키와 다름을 파악 (<code>step_wise_scores</code> 없음)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-01-21 (수) 22:30</div>
+                    <div class="timeline-title">키 매핑 수정</div>
+                    <div class="timeline-desc">
+                        <ul class="checklist">
+                            <li><code>step_wise_scores</code> → <code>PRM_score_list</code> 매핑</li>
+                            <li><code>correct</code> → <code>is_correct</code> 매핑</li>
+                            <li>fallback 로직 추가 (두 키 모두 확인)</li>
+                            <li>3개 함수 모두 수정 (analyze_rq1, analyze_rq2, analyze_rq3)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-01-21 (수) 22:45</div>
+                    <div class="timeline-title">에러 핸들링 추가</div>
+                    <div class="timeline-desc">
+                        <ul class="checklist">
+                            <li>ZeroDivisionError 방지 (<code>total_processed == 0</code> 체크)</li>
+                            <li>데이터 구조 검증 및 자동 감지</li>
+                            <li>대체 경로 로직 구현 (데이터셋 자동 찾기)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-01-21 (수) 23:00</div>
+                    <div class="timeline-title">GitHub 커밋 및 푸시</div>
+                    <div class="timeline-desc">
+                        <ul class="checklist">
+                            <li>commit 1: HPC 경로 수정 (83df313)</li>
+                            <li>commit 2: 체크포인트 파싱 및 데이터셋 경로 (50dde0f)</li>
+                            <li>commit 3: 키 매핑 수정 (4a7c4a7)</li>
+                            <li>모든 변경사항 origin/main에 푸시 완료</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 발생한 이슈 ========== -->
+        <section class="section">
+            <h2>⚠️ 발생한 주요 이슈</h2>
+
+            <div class="issue-box">
+                <div class="issue-title">이슈 1: 체크포인트 파일 키 불일치</div>
+                <p><strong>증상:</strong> ZeroDivisionError, <code>총 처리된 샘플: 0</code></p>
+                <p><strong>원인:</strong> 스크립트가 찾던 키(<code>step_wise_scores</code>)가 실제 파일에 없음</p>
+                <p><strong>해결:</strong> 체크 명령어로 실제 키 확인 → <code>PRM_score_list</code> 발견 → 스크립트 수정</p>
+            </div>
+
+            <div class="issue-box">
+                <div class="issue-title">이슈 2: Git Pull 미적용</div>
+                <p><strong>증상:</strong> HPC에서 git pull 후에도 구 버전 코드 실행</p>
+                <p><strong>원인:</strong> 로컬과 HPC의 커밋 타이밍 차이</p>
+                <p><strong>해결:</strong> <code>git reset --hard origin/main</code>으로 강제 동기화</p>
+            </div>
+
+            <div class="issue-box">
+                <div class="issue-title">이슈 3: 복사-붙여넣기 들여쓰기 에러</div>
+                <p><strong>증상:</strong> Python <code>-c</code> 옵션 사용 시 IndentationError</p>
+                <p><strong>원인:</strong> 터미널에 붙여넣기 시 자동 들여쓰기 추가</p>
+                <p><strong>해결:</strong> 파일로 스크립트 생성 후 실행</p>
+            </div>
+        </section>
+
+        <!-- ========== 이제 해야 할 작업 ========== -->
+        <section class="section">
+            <h2>🚀 이제 해야 할 작업</h2>
+
+            <h3>단계 1: HPC에서 최종 확인 (즉시)</h3>
+            <div class="timeline">
+                <div class="timeline-item pending">
+                    <div class="timeline-title">1.1 실제 데이터 구조 최종 확인</div>
+                    <div class="timeline-desc">
+                        <div class="code-block">cd ~/med-prm-vl
+python test_checkpoint.py</div>
+                        <p><strong>확인 사항:</strong></p>
+                        <ul class="checklist pending">
+                            <li>PRM_score_list의 데이터 타입 (list인지 확인)</li>
+                            <li>is_correct의 값 (True/False/0/1)</li>
+                            <li>몇 개 샘플이 실제로 PRM_score_list를 가지는지</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item pending">
+                    <div class="timeline-title">1.2 스크립트 최종 수정</div>
+                    <div class="timeline-desc">
+                        <p>test_checkpoint.py 결과에 따라:</p>
+                        <ul class="checklist pending">
+                            <li>데이터 타입 변환 로직 추가 (필요시)</li>
+                            <li>PRM_score_list가 정말 step-wise scores인지 확인</li>
+                            <li>key check 순서 최적화</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3>단계 2: Phase 3 실행 (2-4시간 소요)</h3>
+            <div class="timeline">
+                <div class="timeline-item pending">
+                    <div class="timeline-title">2.1 최신 코드 동기화</div>
+                    <div class="timeline-desc">
+                        <div class="code-block">cd ~/med-prm-vl
+git reset --hard origin/main
+git log --oneline -5</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item pending">
+                    <div class="timeline-title">2.2 Device 0: ProcessBench RQ 분석</div>
+                    <div class="timeline-desc">
+                        <p><strong>목표:</strong> 3개 Research Question 답변 도출</p>
+                        <ul class="checklist pending">
+                            <li><strong>RQ1:</strong> Medical에서도 BoN vs ProcessBench 미스얼라인먼트 존재하는가?</li>
+                            <li><strong>RQ2:</strong> 최소 점수가 마지막 step에 몰리는가?</li>
+                            <li><strong>RQ3:</strong> Consensus Filtering이 의료 도메인에서 효과적인가?</li>
+                        </ul>
+                        <p><strong>예상 결과:</strong> <code>analysis/processebench_integrated_report.json</code></p>
+                        <p><strong>예상 소요시간:</strong> 2-4시간</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item pending">
+                    <div class="timeline-title">2.3 Device 1: Self-Consistency 베이스라인</div>
+                    <div class="timeline-desc">
+                        <p><strong>목표:</strong> BoN의 성능 기여도 정량화</p>
+                        <ul class="checklist pending">
+                            <li>500개 샘플 대상 Self-Consistency 실행 (투표 기반 앙상블)</li>
+                            <li>BoN 없이 정확도 측정 (~65-70% 예상)</li>
+                            <li>Med-PRM 72.59%와 비교 → BoN 기여도 = 2-4%</li>
+                        </ul>
+                        <p><strong>예상 결과:</strong> <code>analysis/sc_only_results.json</code></p>
+                        <p><strong>예상 소요시간:</strong> 6-12시간</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item pending">
+                    <div class="timeline-title">2.4 병렬 실행 명령어</div>
+                    <div class="timeline-desc">
+                        <div class="code-block">cd ~/med-prm-vl
+nohup bash scripts/run_phase3_parallel.sh > logs/phase3_master.log 2>&1 &
+
+# 모니터링 (별도 터미널)
+tail -f logs/device0_processebench.log
+tail -f logs/device1_self_consistency.log</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>단계 3: 결과 분석 (2-3시간 소요)</h3>
+            <div class="timeline">
+                <div class="timeline-item pending">
+                    <div class="timeline-title">3.1 RQ 결과 해석</div>
+                    <div class="timeline-desc">
+                        <p><strong>의사결정 트리:</strong></p>
+                        <table>
+                            <tr>
+                                <th>시나리오</th>
+                                <th>결과</th>
+                                <th>의미</th>
+                                <th>다음 단계</th>
+                            </tr>
+                            <tr>
+                                <td>RQ1,2,3 모두 YES</td>
+                                <td>문제 발생 확인</td>
+                                <td>Medical에서도 BoN의 한계 존재</td>
+                                <td>옵션 1: SC 재실행</td>
+                            </tr>
+                            <tr>
+                                <td>RQ1/2 일부만 YES</td>
+                                <td>부분 문제</td>
+                                <td>특정 시나리오에서만 문제</td>
+                                <td>옵션 3: Raw Model 비교</td>
+                            </tr>
+                            <tr>
+                                <td>모두 NO</td>
+                                <td>문제 없음</td>
+                                <td>Medical이 특별한 도메인</td>
+                                <td>논문: "Why Medical is Different"</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="timeline-item pending">
+                    <div class="timeline-title">3.2 데이터 시각화</div>
+                    <div class="timeline-desc">
+                        <ul class="checklist pending">
+                            <li>Min score 위치 분포 차트</li>
+                            <li>RQ 비율 비교 (Early vs Late)</li>
+                            <li>Self-Consistency vs BoN 정확도 비교</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item pending">
+                    <div class="timeline-title">3.3 논문 작성</div>
+                    <div class="timeline-desc">
+                        <p><strong>제목:</strong> "Is Best-of-N Sufficient? Analyzing Process Reward Model Alignment in Medical Reasoning"</p>
+                        <p><strong>구성:</strong></p>
+                        <ul class="checklist pending">
+                            <li>Abstract (결과 요약)</li>
+                            <li>Introduction (Qwen ProcessBench 배경)</li>
+                            <li>Methods (3개 RQ 분석 방법)</li>
+                            <li>Results (Phase 3 결과)</li>
+                            <li>Discussion (Medical Domain 특성)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3>단계 4: GitHub 최종 정리 (30분 소요)</h3>
+            <div class="timeline">
+                <div class="timeline-item pending">
+                    <div class="timeline-title">4.1 README 업데이트</div>
+                    <div class="timeline-desc">
+                        <ul class="checklist pending">
+                            <li>Phase 3 결과 요약 추가</li>
+                            <li>3개 RQ 결과 테이블 추가</li>
+                            <li>디렉토리 구조 최신화</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item pending">
+                    <div class="timeline-title">4.2 폴더 구조화</div>
+                    <div class="timeline-desc">
+                        <div class="code-block">med-prm-vl/
+├── README.md (최신화)
+├── scripts/
+│   ├── 5_analyze_processebench.py
+│   ├── 6_evaluate_self_consistency.py
+│   └── run_phase3_parallel.sh
+├── analysis/
+│   ├── processebench_orm_report.json
+│   ├── processebench_prm_report.json
+│   └── sc_only_results.json
+├── docs/
+│   ├── PHASE3_RESULTS.md (결과 요약)
+│   └── PHASE3_METHODOLOGY.md (방법론)
+└── PHASE3_PROGRESS.html (이 파일)</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item pending">
+                    <div class="timeline-title">4.3 최종 커밋</div>
+                    <div class="timeline-desc">
+                        <div class="code-block">git add .
+git commit -m "feat(phase3): Complete ProcessBench RQ analysis and SC baseline evaluation"
+git push origin main</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 핵심 정보 ========== -->
+        <section class="section">
+            <h2>📊 핵심 정보</h2>
+
+            <h3>생성된 스크립트 요약</h3>
+            <table>
+                <tr>
+                    <th>파일명</th>
+                    <th>용도</th>
+                    <th>입력</th>
+                    <th>출력</th>
+                    <th>상태</th>
+                </tr>
+                <tr>
+                    <td>5_analyze_processebench.py</td>
+                    <td>3개 RQ 분석</td>
+                    <td>checkpoint JSON (1.4GB)</td>
+                    <td>processebench_report.json</td>
+                    <td><span class="status-badge status-complete">준비됨</span></td>
+                </tr>
+                <tr>
+                    <td>6_evaluate_self_consistency.py</td>
+                    <td>SC 베이스라인</td>
+                    <td>dataset JSON</td>
+                    <td>sc_only_results.json</td>
+                    <td><span class="status-badge status-complete">준비됨</span></td>
+                </tr>
+                <tr>
+                    <td>run_phase3_parallel.sh</td>
+                    <td>병렬 오케스트레이터</td>
+                    <td>없음</td>
+                    <td>통합 보고서</td>
+                    <td><span class="status-badge status-complete">준비됨</span></td>
+                </tr>
+            </table>
+
+            <h3>예상 결과 구조</h3>
+            <table>
+                <tr>
+                    <th>파일명</th>
+                    <th>내용</th>
+                    <th>크기</th>
+                    <th>생성시간</th>
+                </tr>
+                <tr>
+                    <td>processebench_orm_report.json</td>
+                    <td>RQ1/2/3 분석 (ORM 점수)</td>
+                    <td>~10MB</td>
+                    <td>1-2시간</td>
+                </tr>
+                <tr>
+                    <td>processebench_prm_report.json</td>
+                    <td>RQ1/2/3 분석 (PRM 점수)</td>
+                    <td>~10MB</td>
+                    <td>1-2시간</td>
+                </tr>
+                <tr>
+                    <td>sc_only_results.json</td>
+                    <td>SC 정확도 (500개 샘플)</td>
+                    <td>~50MB</td>
+                    <td>6-12시간</td>
+                </tr>
+                <tr>
+                    <td>processebench_integrated_report.json</td>
+                    <td>최종 통합 보고서</td>
+                    <td>~20MB</td>
+                    <td>병렬 완료 후</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- ========== 빠른 참조 ========== -->
+        <section class="section">
+            <h2>⚡ 빠른 참조</h2>
+
+            <h3>HPC 실행 명령어</h3>
+            <div class="code-block">
+# 1. 최신 코드 받기
+cd ~/med-prm-vl
+git reset --hard origin/main
+
+# 2. 검사
+python test_checkpoint.py
+
+# 3. 실행
+nohup bash scripts/run_phase3_parallel.sh > logs/phase3_master.log 2>&1 &
+
+# 4. 모니터링
+tail -f logs/device0_processebench.log
+tail -f logs/device1_self_consistency.log
+
+# 5. 완료 확인 (6-12시간 후)
+ls -lh analysis/
+cat analysis/processebench_integrated_report.json
+            </div>
+
+            <h3>GitHub 저장소</h3>
+            <p><a href="https://github.com/Youngkwon-Lee/med-prm-vl" class="github-link">https://github.com/Youngkwon-Lee/med-prm-vl</a></p>
+
+            <h3>중요 커밋</h3>
+            <ul class="checklist">
+                <li><code>4a7c4a7</code> - 키 매핑 수정 (step_wise_scores→PRM_score_list)</li>
+                <li><code>50dde0f</code> - 체크포인트 파싱 개선</li>
+                <li><code>83df313</code> - HPC 경로 수정</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>Med-PRM Phase 3 진행 상황 | 생성: 2026-01-21 | <a href="https://github.com/Youngkwon-Lee/med-prm-vl" class="github-link">GitHub</a></p>
+        </footer>
+    </div>
+</body>
+</html>
