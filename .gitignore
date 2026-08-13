@@ -1,3 +1,6 @@
+
+# Generated evaluation outputs and checkpoints
+output/
 # Data - HuggingFace cache ignored
 # But allow phase1_samples results
 !data/phase1_samples/
